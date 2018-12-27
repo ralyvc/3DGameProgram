@@ -8,7 +8,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/Program Files/LLVM/x86_64-w64-mingw32/include/**",
-                "C:/Program Files/LLVM/include/**"
+                "C:/Program Files/LLVM/include/**",
+                "C:/Program Files/LLVM/x86_64-w64-mingw32/include/**"
             ],
             "defines": [
                 "GLFW_DLL"
