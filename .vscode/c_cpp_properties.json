@@ -3,12 +3,16 @@
     "configurations": [
         {
             "name": "MinGW",
-            "intelliSenseMode": "clang-x64",
+            "intelliSenseMode": "gcc-x64",
             "compilerPath": "C:/Program Files/LLVM/bin/gcc.exe",
             "includePath": [
-                "${workspaceFolder}"
+                "${workspaceFolder}/**",
+                "C:/Program Files/LLVM/x86_64-w64-mingw32/include/**",
+                "C:/Program Files/LLVM/include/**"
             ],
-            "defines": [],
+            "defines": [
+                "GLFW_DLL"
+            ],
             "browse": {
                 "path": [
                     "${workspaceFolder}"
