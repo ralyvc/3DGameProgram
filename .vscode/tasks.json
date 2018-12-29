@@ -15,13 +15,14 @@
                 "--target=x86_64-w64-mingw", // clang的默认target为msvc，不加这一条就会找不到头文件；Linux下去掉这一条
                 "-std=c++17", // C语言最新标准为c11，或根据自己的需要进行修改
                 "-I${fileDirname}/openGL/include",
-                "-I\"C:/Program Files/LLVM/x86_64-w64-mingw32/include\"",
                 "-L${fileDirname}/openGL/libs",
-                "-L\"C:/Program Files/LLVM/x86_64-w64-mingw32/lib\"",
+                "-L\"C:/Program Files/LLVM/lib\"",
                 "-lglad",
                 "-lglfw3",
                 "-lglfw3dll",
-                "-v"
+                "-llibSDL2",
+                
+                "-v",
             ], // 编译命令参数
             "type": "shell", // 可以为shell或process，前者相当于先打开shell再输入命令，后者是直接运行命令
             "group": {
