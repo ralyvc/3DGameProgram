@@ -11,8 +11,9 @@
         }
         _width = width;
         _height = height;
-        _window = SDL_CreateWindow("Solft Render based on SDL2", 0, 0, _width, _height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_POPUP_MENU);
+        _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
+        _canvas = new Canvas((uint32_t*)_surface->pixels, _width, _height);
         _isRunning = true;
     }
     catch (const char *s)
@@ -28,13 +29,24 @@ void SDL2Window::Run()
     while (_isRunning)
     {
         SDL_LockSurface(_surface);
-
+        Clear();
         UpdateInput();
-
+        Draw();
+        Show();
         SDL_UnlockSurface(_surface);
     }
 }
 
+void SDL2Window::Clear()
+{
+    _canvas->clear();
+}
+
+
+void SDL2Window::Draw()
+{
+    _canvas->BresenhamLine1(0, 4, 1100, 456, 0xffff00ff);
+}
 void SDL2Window::UpdateInput()
 {
     if (SDL_PollEvent(&_event)) {
@@ -76,9 +88,10 @@ void SDL2Window::Quit()
 
 void SDL2Window::Show()
 {
-    //SDL_UnlockSurface(_surface);
+    SDL_UpdateWindowSurface(_window);
 }
 
 SDL2Window::~SDL2Window()
 {
+    delete _canvas;
 }
