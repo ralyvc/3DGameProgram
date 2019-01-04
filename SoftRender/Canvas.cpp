@@ -25,6 +25,7 @@ void Canvas::BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c)
     {
         putPixel(x, y, c);
         e = e + k;
+        x++;
         if (e > 0.5)
         {
             y++;
@@ -45,6 +46,7 @@ void Canvas::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
     for (size_t i = x0; i <= x1; i++)
     {
         putPixel(x, y, c);
+        x++;
         e = e + dy;
         if (e > dx)
         {

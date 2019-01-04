@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** 3DGameProgram
+** File description:
+** main
+*/
+
 
 #include "SoftRender/SDL2Window.h"
 #include <iostream>

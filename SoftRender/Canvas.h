@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2019
+** 3DGameProgram
+** File description:
+** Canvas
+*/
+
 #include "Color.h"
 #include <iostream>
 #pragma once
