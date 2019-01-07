@@ -46,7 +46,7 @@ void SDL2Window::Clear()
 
 void SDL2Window::Draw()
 {
-    _canvas->BresenhamLine(600, 600, 450, 500, 0xff0000ff);
+    _canvas->BresenhamLine(600, 600, 450, 500, 0xff0078ff);
 }
 void SDL2Window::UpdateInput()
 {
