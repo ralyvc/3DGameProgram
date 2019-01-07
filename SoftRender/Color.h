@@ -10,10 +10,11 @@ public:
     float g;
     float b;
     float a;
-    
+    uint32_t data;
     Color(float r=1.0f, float g=1.0f, float b=1.0f, float a=1.0f);
     Color(uint32_t rgba);
-    
+    Color(int32_t rgba);
+
     static Color randomColor() {
         float r = (rand() % 255) / 255.0;
         float g = (rand() % 255) / 255.0;
