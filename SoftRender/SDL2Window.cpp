@@ -13,6 +13,7 @@
         _height = height;
         _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height,  SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
+
         _canvas = new Canvas((uint32_t*)_surface->pixels, _width, _height);
         _isRunning = true;
     }
@@ -45,7 +46,7 @@ void SDL2Window::Clear()
 
 void SDL2Window::Draw()
 {
-    _canvas->BresenhamLine(0, 0, 100, 720, 0xff000000);
+    _canvas->BresenhamLine(600, 600, 450, 500, 0xff0000ff);
 }
 void SDL2Window::UpdateInput()
 {
