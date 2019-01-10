@@ -14,7 +14,7 @@
         _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height,  SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
 
-        _canvas = new Canvas((uint32_t*)_surface->pixels, _width, _height);
+        _renderer = new Renderer( _width, _height);
         _isRunning = true;
     }
     catch (const char *s)
@@ -26,27 +26,29 @@
 
 void SDL2Window::Run()
 {
-
+    int count = 0;
     while (_isRunning)
     {
-        SDL_LockSurface(_surface);
-        Clear();
+        ++count;
+        Uint32 start = SDL_GetTicks();
         UpdateInput();
+        Clear();
         Draw();
-        Show();
-        SDL_UnlockSurface(_surface);
+        SwapBuffers();
+        //Uint32 deltaT = SDL_GetTicks() - start;
+        //printf("%2.1d: Frame elapsed time (ms):%d\n",count, deltaT);
     }
 }
 
 void SDL2Window::Clear()
 {
-    _canvas->clear();
+    _renderer->clear();
 }
 
 
 void SDL2Window::Draw()
 {
-    _canvas->BresenhamLine(-34,345,456,720,-1234);
+    _renderer->BresenhamLine(-34,345,456,720,-1234);
 }
 void SDL2Window::UpdateInput()
 {
@@ -87,12 +89,22 @@ void SDL2Window::Quit()
     _isRunning = false;
 }
 
-void SDL2Window::Show()
-{
+
+
+void SDL2Window::SwapBuffers(){
+    //Allows surface editing 
+    SDL_LockSurface(_surface);
+    auto pixels = _renderer->GetBuffer();
+    //Copy pixels buffer resuls to screen surface
+    memcpy(_surface->pixels,pixels->buffer, pixels->mHeight*pixels->mPitch);
+    SDL_UnlockSurface(_surface);
+
+    //Apply surface changes to window
     SDL_UpdateWindowSurface(_window);
+
 }
 
 SDL2Window::~SDL2Window()
 {
-    delete _canvas;
+    delete _renderer;
 }

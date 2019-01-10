@@ -2,13 +2,14 @@
 ** EPITECH PROJECT, 2019
 ** 3DGameProgram
 ** File description:
-** Canvas
+** Renderer
 */
 
 #include "Color.h"
+#include "Buffer.h"
 #include <iostream>
 #pragma once
-class Canvas
+class Renderer
 {
     enum ClipCode
     {
@@ -24,23 +25,24 @@ class Canvas
 
     };
 
-    uint32_t *_pixels;
-    float _width;
-    float _height;
+    Buffer<uint32_t> *pixBuffer;
+    int _width;
+    int _height;
 
     void putPixel(int x, int y, const Color &color);
     ClipCode getClipCode(int x, int y);
 
   public:
-    Canvas(uint32_t *pixels, float width, float height)
+    Renderer(int width, int height)
     {
-        _pixels = pixels;
         _width = width;
         _height = height;
+        pixBuffer = new Buffer<uint32_t>(_width, _height);
     };
     void BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c);
     void BresenhamLine(int x0, int y0, int x1, int y1, const Color &c);
-    virtual ~Canvas(){};
+    Buffer<uint32_t> *GetBuffer();
+    virtual ~Renderer() { delete pixBuffer; };
 
     void clear();
 

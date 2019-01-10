@@ -1,5 +1,6 @@
 #include "../Third/include/SDL2/SDL.h"
-#include "Canvas.h"
+#include "Renderer.h"
+#include "Buffer.h"
 #pragma once
 
 class SDL2Window
@@ -11,7 +12,8 @@ class SDL2Window
     int _height;
     SDL_Surface *_surface;
     SDL_Event _event;
-    Canvas *_canvas;
+    Renderer *_renderer;
+
 
   public:
     SDL2Window(int width, int height);
@@ -23,7 +25,7 @@ class SDL2Window
   private:
     void UpdateInput();
     void Update();
-    void Show();
     void Quit();
     void HandleKey();
+    void SwapBuffers();
 };

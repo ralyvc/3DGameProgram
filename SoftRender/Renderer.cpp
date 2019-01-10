@@ -1,23 +1,17 @@
-#include "Canvas.h"
-#include <cstring>=
+#include "Renderer.h"
+#include <cstring>
 
-void Canvas::clear()
+void Renderer::clear()
 {
-    memset((uint32_t *)_pixels, 0, sizeof(uint32_t) * _width * _height);
+    pixBuffer->clear();
 }
 
-void Canvas::putPixel(int x, int y, const Color &color)
+void Renderer::putPixel(int x, int y, const Color &color)
 {
-    int index = (int)(_width * y + x);
-    
-    // if (index >= _width*_height || index < 0 ) {
-    //     return;
-    // }
-    
-    _pixels[index] = color.uint32();
+    (*pixBuffer)(x, y) = color.uint32();
 }
 
-void Canvas::BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c)
+void Renderer::BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c)
 {
     int x = x0;
     int y = y0;
@@ -39,7 +33,7 @@ void Canvas::BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c)
     }
 }
 //等式两边同时乘以2*dx
-void Canvas::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
+void Renderer::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
 {
 
     if (ClipLine(x0, y0, x1, y1))
@@ -84,44 +78,44 @@ void Canvas::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
     }
 }
 
-Canvas::ClipCode Canvas::getClipCode(int x, int y)
+Renderer::ClipCode Renderer::getClipCode(int x, int y)
 {
 
-    Canvas::ClipCode clipCode = Canvas::ClipCodeC;
+    Renderer::ClipCode clipCode = Renderer::ClipCodeC;
 
     if (x < 0)
     {
-        clipCode = Canvas::ClipCode(clipCode | Canvas::ClipCodeW);
+        clipCode = Renderer::ClipCode(clipCode | Renderer::ClipCodeW);
     }
     else if (x >= _width)
     {
-        clipCode = Canvas::ClipCode(clipCode | Canvas::ClipCodeE);
+        clipCode = Renderer::ClipCode(clipCode | Renderer::ClipCodeE);
     }
     if (y < 0)
     {
-        clipCode = Canvas::ClipCode(clipCode | Canvas::ClipCodeN);
+        clipCode = Renderer::ClipCode(clipCode | Renderer::ClipCodeN);
     }
     else if (y >= _height)
     {
-        clipCode = Canvas::ClipCode(clipCode | Canvas::ClipCodeS);
+        clipCode = Renderer::ClipCode(clipCode | Renderer::ClipCodeS);
     }
     return clipCode;
 }
 
 //https://blog.csdn.net/soulmeetliang/article/details/79179350
 //Cohen－Sutherland 算法
-bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
+bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1)
 {
 
-    Canvas::ClipCode p1Code = getClipCode(x0, y0);
-    Canvas::ClipCode p2Code = getClipCode(x1, y1);
+    Renderer::ClipCode p1Code = getClipCode(x0, y0);
+    Renderer::ClipCode p2Code = getClipCode(x1, y1);
 
     if (p1Code & p2Code)
     {
         return false;
     }
 
-    if (p1Code == Canvas::ClipCodeC && p2Code == Canvas::ClipCodeC)
+    if (p1Code == Renderer::ClipCodeC && p2Code == Renderer::ClipCodeC)
     {
         return true;
     }
@@ -138,26 +132,26 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
 
     switch (p1Code)
     {
-    case Canvas::ClipCodeC:
+    case Renderer::ClipCodeC:
         break;
 
-    case Canvas::ClipCodeN:
+    case Renderer::ClipCodeN:
         x0 = x1 + (0 - y1) * k1;
         y0 = 0;
         break;
-    case Canvas::ClipCodeS:
+    case Renderer::ClipCodeS:
         x0 = x1 + (_height-1 - y1) * k1;
         y0 = _height-1;
         break;
-    case Canvas::ClipCodeW:
+    case Renderer::ClipCodeW:
         y0 = y1 + (0 - x1) * k;
         x0 = 0;
         break;
-    case Canvas::ClipCodeE:
+    case Renderer::ClipCodeE:
         y0 = y1 + (_width-1 - x1) * k;
         x0 = _width-1;
         break;
-    case Canvas::ClipCodeNE:
+    case Renderer::ClipCodeNE:
         x0 = x1 + (0 - y1) * k1;
         y0 = 0;
         if (x0 < 0 || x0 >= _width)
@@ -166,7 +160,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x0 = _width-1;
         }
         break;
-    case Canvas::ClipCodeSE:
+    case Renderer::ClipCodeSE:
         x0 = x1 + (_height-1 - y1) * k1;
         y0 = _height;
         if (x0 < 0 || x0 >= _width)
@@ -175,7 +169,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x0 = _width-1;
         }
         break;
-    case Canvas::ClipCodeNW:
+    case Renderer::ClipCodeNW:
         x0 = x1 + (0 - y1) * k1;
         y0 = 0;
         if (x0 < 0 || x0 >= _width)
@@ -184,7 +178,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x0 = 0;
         }
         break;
-    case Canvas::ClipCodeSW:
+    case Renderer::ClipCodeSW:
         x0 = x1 + (_height-1 - y1) * k1;
         y0 = _height-1;
         if (x0 < 0 || x0 >= _width)
@@ -202,26 +196,26 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
     }
     switch (p2Code)
     {
-    case Canvas::ClipCodeC:
+    case Renderer::ClipCodeC:
         break;
 
-    case Canvas::ClipCodeN:
+    case Renderer::ClipCodeN:
         x1 = x0 + (0 - y0) * k1;
         y1 = 0;
         break;
-    case Canvas::ClipCodeS:
+    case Renderer::ClipCodeS:
         x1 = x0 + (_height-1 - y0) * k1;
         y1 = _height-1;
         break;
-    case Canvas::ClipCodeW:
+    case Renderer::ClipCodeW:
         y1 = y0 + (0 - x0) * k;
         x1 = 0;
         break;
-    case Canvas::ClipCodeE:
+    case Renderer::ClipCodeE:
         y1 = y0 + (_width-1 - x0) * k;
         x1 = _width-1;
         break;
-    case Canvas::ClipCodeNE:
+    case Renderer::ClipCodeNE:
         x1 = x0 + (0 - y0) * k1;
         y1 = 0;
         if (x1 < 0 || x1 >= _width)
@@ -230,7 +224,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x1 = _width-1;
         }
         break;
-    case Canvas::ClipCodeSE:
+    case Renderer::ClipCodeSE:
         x1 = x0 + (_height-1 - y0) * k1;
         y1 = _height-1;
         if (x1 < 0 || x1 >= _width)
@@ -239,7 +233,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x1 = _width-1;
         }
         break;
-    case Canvas::ClipCodeNW:
+    case Renderer::ClipCodeNW:
         x1 = x0 + (0 - y0) * k1;
         y1 = 0;
         if (x1 < 0 || x1 >= _width)
@@ -248,7 +242,7 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
             x1 = 0;
         }
         break;
-    case Canvas::ClipCodeSW:
+    case Renderer::ClipCodeSW:
         x1 = x0 + (_height-1 - y0) * k1;
         y1 = _height-1;
         if (x1 < 0 || x1 >= _width)
@@ -264,4 +258,9 @@ bool Canvas::ClipLine(int &x0, int &y0, int &x1, int &y1)
         return false;
     }
     return true;
+}
+
+Buffer<uint32_t> *Renderer::GetBuffer()
+{
+    return pixBuffer;
 }
