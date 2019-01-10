@@ -78,7 +78,7 @@ void Renderer::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
     }
 }
 
-Renderer::ClipCode Renderer::getClipCode(int x, int y)
+Renderer::ClipCode Renderer::getClipCode(int x, int y) const
 {
 
     Renderer::ClipCode clipCode = Renderer::ClipCodeC;
@@ -104,7 +104,7 @@ Renderer::ClipCode Renderer::getClipCode(int x, int y)
 
 //https://blog.csdn.net/soulmeetliang/article/details/79179350
 //Cohen－Sutherland 算法
-bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1)
+bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
 {
 
     Renderer::ClipCode p1Code = getClipCode(x0, y0);
@@ -260,7 +260,7 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1)
     return true;
 }
 
-Buffer<uint32_t> *Renderer::GetBuffer()
+Buffer<uint32_t> *Renderer::GetBuffer() const
 {
     return pixBuffer;
 }

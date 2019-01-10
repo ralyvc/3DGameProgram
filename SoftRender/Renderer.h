@@ -30,7 +30,7 @@ class Renderer
     int _height;
 
     void putPixel(int x, int y, const Color &color);
-    ClipCode getClipCode(int x, int y);
+    ClipCode getClipCode(int x, int y) const;
 
   public:
     Renderer(int width, int height)
@@ -41,10 +41,10 @@ class Renderer
     };
     void BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c);
     void BresenhamLine(int x0, int y0, int x1, int y1, const Color &c);
-    Buffer<uint32_t> *GetBuffer();
+    Buffer<uint32_t> *GetBuffer() const;
     virtual ~Renderer() { delete pixBuffer; };
 
     void clear();
 
-    bool ClipLine(int &x0, int &y0, int &x1, int &y1);
+    bool ClipLine(int &x0, int &y0, int &x1, int &y1)const;
 };
