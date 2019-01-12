@@ -5,7 +5,7 @@
 {
     try
     {
-        if (SDL_Init(SDL_INIT_VIDEO == -1))
+        if (SDL_Init(SDL_INIT_VIDEO) == -1)
         {
             throw SDL_GetError();
         }
@@ -38,6 +38,7 @@ void SDL2Window::Run()
         //Uint32 deltaT = SDL_GetTicks() - start;
         //printf("%2.1d: Frame elapsed time (ms):%d\n",count, deltaT);
     }
+
 }
 
 void SDL2Window::Clear()
@@ -48,9 +49,9 @@ void SDL2Window::Clear()
 
 void SDL2Window::Draw()
 {
-    _renderer->drawFlatBottomTriangle(Vector3i(300, 300, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),Color::randomColor());
+    _renderer->drawFlatBottomTriangle(Vector3i(300, 300, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),0xff000034);
 
-    _renderer->drawFlatBottomTriangle(Vector3i(400, 400, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),Color::randomColor());
+    _renderer->drawFlatBottomTriangle(Vector3i(400, 400, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),0x00ff0056);
 }
 void SDL2Window::UpdateInput()
 {
@@ -109,4 +110,5 @@ void SDL2Window::SwapBuffers(){
 SDL2Window::~SDL2Window()
 {
     delete _renderer;
+    SDL_Quit();
 }
