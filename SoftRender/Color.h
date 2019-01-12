@@ -10,7 +10,7 @@ public:
     float g;
     float b;
     float a;
-    uint32_t data;
+
     Color(float r=1.0f, float g=1.0f, float b=1.0f, float a=1.0f);
     Color(uint32_t rgba);
     Color(int32_t rgba);

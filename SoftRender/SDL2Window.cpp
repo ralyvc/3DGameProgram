@@ -48,7 +48,9 @@ void SDL2Window::Clear()
 
 void SDL2Window::Draw()
 {
-    _renderer->BresenhamLine(-34,345,456,720,-1234);
+    _renderer->drawFlatBottomTriangle(Vector3i(300, 300, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),Color::randomColor());
+
+    _renderer->drawFlatBottomTriangle(Vector3i(400, 400, 0), Vector3i(100, 500, 0), Vector3i(500, 500, 0),Color::randomColor());
 }
 void SDL2Window::UpdateInput()
 {

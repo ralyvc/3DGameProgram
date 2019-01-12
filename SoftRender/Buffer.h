@@ -13,12 +13,10 @@ struct Buffer
     int mWidth, mHeight, mPixelCount, mPitch, mOrigin;
     T *buffer;
 
-    //The buffer is actually just a simple 1D array which we access using an equation
-    //Notice how it's not the usual (y*width + x) equation that you see for most quasi 2D arrays
-    //This is because the origin is at the lower left (instead of upper left) and y moves upwards
+
     T &operator()(size_t x, size_t y)
     {
-        return buffer[mOrigin + -y * mWidth + x];
+        return buffer[y * mWidth + x];
     }
 
     Buffer(int w, int h)

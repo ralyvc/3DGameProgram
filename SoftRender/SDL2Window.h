@@ -1,6 +1,7 @@
 #include "../Third/include/SDL2/SDL.h"
 #include "Renderer.h"
 #include "Buffer.h"
+#include "Color.h"
 #pragma once
 
 class SDL2Window
