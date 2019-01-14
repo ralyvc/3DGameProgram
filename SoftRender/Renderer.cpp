@@ -140,33 +140,33 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
         y0 = 0;
         break;
     case Renderer::ClipCodeS:
-        x0 = x1 + (_height-1 - y1) * k1;
-        y0 = _height-1;
+        x0 = x1 + (_height - 1 - y1) * k1;
+        y0 = _height - 1;
         break;
     case Renderer::ClipCodeW:
         y0 = y1 + (0 - x1) * k;
         x0 = 0;
         break;
     case Renderer::ClipCodeE:
-        y0 = y1 + (_width-1 - x1) * k;
-        x0 = _width-1;
+        y0 = y1 + (_width - 1 - x1) * k;
+        x0 = _width - 1;
         break;
     case Renderer::ClipCodeNE:
         x0 = x1 + (0 - y1) * k1;
         y0 = 0;
         if (x0 < 0 || x0 >= _width)
         {
-            y0 = y1 + (_width-1 - x1) * k;
-            x0 = _width-1;
+            y0 = y1 + (_width - 1 - x1) * k;
+            x0 = _width - 1;
         }
         break;
     case Renderer::ClipCodeSE:
-        x0 = x1 + (_height-1 - y1) * k1;
+        x0 = x1 + (_height - 1 - y1) * k1;
         y0 = _height;
         if (x0 < 0 || x0 >= _width)
         {
-            y0 = y1 + (_width-1 - x1) * k;
-            x0 = _width-1;
+            y0 = y1 + (_width - 1 - x1) * k;
+            x0 = _width - 1;
         }
         break;
     case Renderer::ClipCodeNW:
@@ -179,8 +179,8 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
         }
         break;
     case Renderer::ClipCodeSW:
-        x0 = x1 + (_height-1 - y1) * k1;
-        y0 = _height-1;
+        x0 = x1 + (_height - 1 - y1) * k1;
+        y0 = _height - 1;
         if (x0 < 0 || x0 >= _width)
         {
             y0 = y1 + (0 - x1) * k;
@@ -190,8 +190,9 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
     default:
         break;
     }
-    
-    if (x0<0||x0>=_width||y0<0||y0>=_height ) {
+
+    if (x0 < 0 || x0 >= _width || y0 < 0 || y0 >= _height)
+    {
         return false;
     }
     switch (p2Code)
@@ -204,33 +205,33 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
         y1 = 0;
         break;
     case Renderer::ClipCodeS:
-        x1 = x0 + (_height-1 - y0) * k1;
-        y1 = _height-1;
+        x1 = x0 + (_height - 1 - y0) * k1;
+        y1 = _height - 1;
         break;
     case Renderer::ClipCodeW:
         y1 = y0 + (0 - x0) * k;
         x1 = 0;
         break;
     case Renderer::ClipCodeE:
-        y1 = y0 + (_width-1 - x0) * k;
-        x1 = _width-1;
+        y1 = y0 + (_width - 1 - x0) * k;
+        x1 = _width - 1;
         break;
     case Renderer::ClipCodeNE:
         x1 = x0 + (0 - y0) * k1;
         y1 = 0;
         if (x1 < 0 || x1 >= _width)
         {
-            y1 = y0 + (_width-1 - x0) * k;
-            x1 = _width-1;
+            y1 = y0 + (_width - 1 - x0) * k;
+            x1 = _width - 1;
         }
         break;
     case Renderer::ClipCodeSE:
-        x1 = x0 + (_height-1 - y0) * k1;
-        y1 = _height-1;
+        x1 = x0 + (_height - 1 - y0) * k1;
+        y1 = _height - 1;
         if (x1 < 0 || x1 >= _width)
         {
-            y1 = y0 + (_width-1 - x0) * k;
-            x1 = _width-1;
+            y1 = y0 + (_width - 1 - x0) * k;
+            x1 = _width - 1;
         }
         break;
     case Renderer::ClipCodeNW:
@@ -243,8 +244,8 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
         }
         break;
     case Renderer::ClipCodeSW:
-        x1 = x0 + (_height-1 - y0) * k1;
-        y1 = _height-1;
+        x1 = x0 + (_height - 1 - y0) * k1;
+        y1 = _height - 1;
         if (x1 < 0 || x1 >= _width)
         {
             y1 = y0 + (0 - x0) * k;
@@ -254,7 +255,8 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
     default:
         break;
     }
-       if (x1<0||x1>=_width||y1<0||y1>=_height ) {
+    if (x1 < 0 || x1 >= _width || y1 < 0 || y1 >= _height)
+    {
         return false;
     }
     return true;
@@ -263,4 +265,56 @@ bool Renderer::ClipLine(int &x0, int &y0, int &x1, int &y1) const
 Buffer<uint32_t> *Renderer::GetBuffer() const
 {
     return pixBuffer;
+}
+
+void Renderer::drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c)
+{
+    float dxLeft = v3.x - v1.x;
+    float dyLeft = v3.y - v1.y;
+    float sxLeft = 0;
+    if (dyLeft != 0)
+    {
+        sxLeft = float(dxLeft) / dyLeft;
+    }
+    float dxRigth = v3.x - v2.x;
+    float dyRight = v3.y - v2.y;
+    float sxRight = 0;
+    if (dyRight != 0)
+    {
+        sxRight = float(dxRigth) / dyRight;
+    }
+    float xl = v1.x;
+    float xr = v2.x;
+    int endY = v3.y;
+
+    if (v1.y < 0)
+    {
+        xl = v1.x - dxLeft * v1.y;
+        xr = v2.x - dxRigth * v1.y;
+    }
+    if (v3.y >= _height)
+    {
+        endY = _height;
+    }
+    if (xl > xr)
+    {
+        std::swap(xl, xr);
+        std::swap(sxLeft, sxRight);
+    }
+
+    if (v1.x >= 0 && v1.x < _width && v2.x >= 0 && v2.x < _width && v3.x >= 0 && v3.x < _width)
+    {
+        for (size_t i = v1.y; i <= endY; i++)
+        {
+            pixBuffer->SetBuffer(xl, i, xr, i, c.data);
+            xl += sxLeft;
+            xr += sxRight;
+        }
+    }
+    else
+    {
+        
+    }
+    
+
 }

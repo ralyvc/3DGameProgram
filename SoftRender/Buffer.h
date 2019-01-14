@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <type_traits>
 #include <cstring>
+#include <type_traits>
 using namespace std;
 //Templated struct to emulate GPU buffers such as
 //the frame buffer and the ZBuffer
@@ -12,7 +12,6 @@ struct Buffer
 {
     int mWidth, mHeight, mPixelCount, mPitch, mOrigin;
     T *buffer;
-
 
     T &operator()(size_t x, size_t y)
     {
@@ -44,6 +43,28 @@ struct Buffer
         {
             //Set to a 15% white color to make it nicer looking.
             memset(buffer, 0xD, mPitch * mHeight);
+        }
+    }
+
+    void SetBuffer(int x0, int y0, int x1, int y1,T data)
+    {
+        int begin = y0 * mWidth + x0;
+        int end = y1 * mWidth + x1;
+        
+        if (end < begin) {
+            return;
+        }
+        
+        if (std::is_same<T, float>::value)
+        {
+            for (int i = begin; i <= end; ++i)
+            {
+                buffer[i] = data;
+            }
+        }
+        else
+        {
+            memset(buffer[begin], data, end-begin);
         }
     }
 };
