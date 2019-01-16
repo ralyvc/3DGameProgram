@@ -55,16 +55,11 @@ struct Buffer
             return;
         }
         
-        if (std::is_same<T, float>::value)
+
+        for (int i = begin; i <= end; ++i)
         {
-            for (int i = begin; i <= end; ++i)
-            {
-                buffer[i] = data;
-            }
+            buffer[i] = data;
         }
-        else
-        {
-            memset(buffer[begin], data, end-begin);
-        }
+
     }
 };

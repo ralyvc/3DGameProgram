@@ -313,8 +313,99 @@ void Renderer::drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const
     }
     else
     {
-        
+        float left, right;
+        for (size_t i = v1.y; i <= endY; i++)
+        {
+            left = xl;
+            right = xr;
+            xl += sxLeft;
+            xr += sxRight;
+            if (left <0)
+            {
+                left = 0;    
+                if (right < 0 ) {
+                    continue;
+                }             
+            }           
+            if (right >= _width) {
+                right = _width;         
+                if (left >= _width) {
+                    continue;
+                }  
+            }
+            pixBuffer->SetBuffer(left, i, right , i, c.data);
+        }
     }
+}
     
+void Renderer::drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c)
+{
+    float dxLeft = v2.x - v1.x;
+    float dyLeft = v2.y - v1.y;
+    float sxLeft = 0;
+    if (dyLeft != 0)
+    {
+        sxLeft = float(dxLeft) / dyLeft;
+    }
+    float dxRigth = v3.x - v1.x;
+    float dyRight = v3.y - v1.y;
+    float sxRight = 0;
+    if (dyRight != 0)
+    {
+        sxRight = float(dxRigth) / dyRight;
+    }
+    float xl = v1.x;
+    float xr = v1.x;
+    int endY = v3.y;
+
+    if (v1.y < 0)
+    {
+        xl = v1.x - dxLeft * v1.y;
+        xr = v1.x - dxRigth * v1.y;
+    }
+    if (v3.y >= _height)
+    {
+        endY = _height;
+    }
+    if (xl > xr)
+    {
+        std::swap(xl, xr);
+        std::swap(sxLeft, sxRight);
+    }
+
+    if (v1.x >= 0 && v1.x < _width && v2.x >= 0 && v2.x < _width && v3.x >= 0 && v3.x < _width)
+    {
+        for (size_t i = v1.y; i <= endY; i++)
+        {
+            pixBuffer->SetBuffer(xl, i, xr, i, c.data);
+            xl += sxLeft;
+            xr += sxRight;
+        }
+    }
+    else
+    {
+        float left, right;
+        for (size_t i = v1.y; i <= endY; i++)
+        {
+            left = xl;
+            right = xr;
+            xl += sxLeft;
+            xr += sxRight;
+            if (left <0)
+            {
+                left = 0;    
+                if (right < 0 ) {
+                    continue;
+                }             
+            }           
+            if (right >= _width) {
+                right = _width;         
+                if (left >= _width) {
+                    continue;
+                }  
+            }
+            pixBuffer->SetBuffer(left, i, right , i, c.data);
+        }
+    }
 
 }
