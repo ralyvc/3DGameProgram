@@ -28,7 +28,7 @@ struct Vector3{
 
     //Constructors
     Vector3(): x(0), y(0), z(0), w(1) {};
-    Vector3(T val): x(val), y(val), z(val), w(1) {};
+    Vector3(const T &val): x(val), y(val), z(val), w(1) {};
     Vector3(T x1, T y1, T z1) : x(x1), y(y1), z(z1), w(1) {};
     
     //Homogenous coordinates to cartesian transformation

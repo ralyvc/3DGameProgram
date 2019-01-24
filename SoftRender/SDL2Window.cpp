@@ -103,7 +103,9 @@ void SDL2Window::SwapBuffers(){
 
     //Apply surface changes to window
     SDL_UpdateWindowSurface(_window);
-
+    Matrix<float, 4, 4> mt;
+    Matrix<float, 4, 4> mt2;
+    mt2 = mt;
 }
 
 SDL2Window::~SDL2Window()
