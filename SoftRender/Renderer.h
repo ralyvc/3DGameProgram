@@ -7,7 +7,8 @@
 
 #include "Buffer.h"
 #include "Color.h"
-#include "Vector3.h"
+#include "../Math/Vector3.hpp"
+#include "../Math/Matrix.hpp"
 #include <iostream>
 #pragma once
 class Renderer
