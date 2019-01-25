@@ -49,8 +49,7 @@ void SDL2Window::Clear()
 
 void SDL2Window::Draw()
 {
-    _renderer->drawFlatTopTriangle( Vector3i(100, 300, 0), Vector3i(800, 300, 0),Vector3i(450, 900, 0),0xff0000ff);
-    _renderer->drawFlatBottomTriangle(Vector3i(450, 10, 0), Vector3i(100, 300, 0), Vector3i(800, 300, 0),0x00ff00ff);
+
 }
 void SDL2Window::UpdateInput()
 {
