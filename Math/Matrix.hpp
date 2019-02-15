@@ -1,3 +1,6 @@
+#ifndef MATRIX_H
+#define MATRIX_H
+
 #include <iostream>
 template <typename Type, size_t M, size_t N>
 class Matrix
@@ -37,3 +40,4 @@ class Matrix
     //Debug stuff
     void print();
 };
+#endif // !MATRIX_H
