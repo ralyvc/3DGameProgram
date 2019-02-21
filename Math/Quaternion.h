@@ -5,34 +5,42 @@
 
 class Quaternion
 {
-  public:
-    float w, x, y, z;
+public:
+  float w, x, y, z;
 
-  public:
-    Quaternion();
-    Quaternion(Quaternion &&) = default;
-    Quaternion(const Quaternion &) = default;
-    Quaternion &operator=(Quaternion &&) = default;
-    Quaternion &operator=(const Quaternion &) = default;
-    ~Quaternion();
-    void Identity()
-    {
-        w = 1.0f;
-        x = y = z = 0.0f;
-    }
+public:
+  Quaternion(float ww, float xx, float yy, float zz) : w(ww), x(xx), y(yy), z(ww) {}
+  Quaternion(Quaternion &&) = default;
+  Quaternion(const Quaternion &) = default;
+  Quaternion &operator=(Quaternion &&) = default;
+  Quaternion &operator=(const Quaternion &) = default;
+  ~Quaternion();
+  void Identity()
+  {
+    w = 1.0f;
+    x = y = z = 0.0f;
+  }
 
-    void RotateAboutAxis(const Vector3f &axis, float theta);
-    
+  //四元数叉乘运算
+  Quaternion operator*(const Quaternion &a) const;
 
-  private:
+  Quaternion &operator*=(const Quaternion &a);
+
+  //四元数共轭，即与原四元数旋转相反的四元数
+  Quaternion Conjugate();
+
+  //四元数求幂，即变为原来角度的t倍 logq =(0,theta/2*n) exp(q) = (cos(theta/2),n*sin(theta/2))
+  //q^t = exp(t*logq) 
+  Quaternion Pow(float t);
+
+private:
 };
-
-Quaternion::Quaternion()
-{
-}
 
 Quaternion::~Quaternion()
 {
 }
 
+extern Quaternion AngleAxis(float angle, Vector3f axis);
+  //点乘
+extern float Dot(const Quaternion &lhs, const Quaternion &rhs);
 #endif // QUATERNION_H
