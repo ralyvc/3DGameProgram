@@ -1,30 +1,40 @@
+#include "Vector3.hpp"
 #if !defined(ENLER_ANGLES_H)
 #define ENLER_ANGLES_H
-
+class Quaternion;
 class EulerAngles
 {
-  public:
-    float heading;
-    float pitch;
-    float bank;
+public:
+  union {
+    float heading, y;
+  };
+  union {
+    float pitch, x;
+  };
+  union {
+    float bank, z;
+  };
 
-  public:
-    EulerAngles() {}
-    EulerAngles(float h, float p, float b) : heading(h), pitch(p), bank(b) {}
-    EulerAngles(EulerAngles &&) = default;
-    EulerAngles(const EulerAngles &) = default;
-    EulerAngles &operator=(EulerAngles &&) = default;
-    EulerAngles &operator=(const EulerAngles &) = default;
-    ~EulerAngles();
+public:
+  EulerAngles() {}
+  EulerAngles(float h, float p, float b) : heading(h), pitch(p), bank(b) {}
+  EulerAngles(const Vector3f &vec) : y(vec.y), x(vec.x), z(vec.z) {}
+  EulerAngles(EulerAngles &&) = default;
+  EulerAngles(const EulerAngles &) = default;
+  EulerAngles &operator=(EulerAngles &&) = default;
+  EulerAngles &operator=(const EulerAngles &) = default;
+  ~EulerAngles();
 
-    void Identity()
-    {
-        pitch = bank = heading = 0.0f;
-    }
+  void Identity()
+  {
+    pitch = bank = heading = 0.0f;
+  }
 
-    void Canonize();
+  void Canonize();
 
-  private:
+  Quaternion ToQuaternion();
+
+private:
 };
 
 extern const EulerAngles kEulerAnglesIdentity;

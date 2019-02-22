@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "Buffer.h"
 #include "Color.h"
-#include "../Math/Matrix.hpp"
+#include "../Math/Matrix.h"
 #pragma once
 
 class SDL2Window

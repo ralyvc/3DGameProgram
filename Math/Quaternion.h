@@ -30,8 +30,16 @@ public:
   Quaternion Conjugate();
 
   //四元数求幂，即变为原来角度的t倍 logq =(0,theta/2*n) exp(q) = (cos(theta/2),n*sin(theta/2))
-  //q^t = exp(t*logq) 
-  Quaternion Pow(float t);
+  //q^t = exp(t*logq)
+  Quaternion Pow(float t) const;
+  //点乘
+  float Dot( const Quaternion &rhs) const;
+
+  float GetRotationAngle();
+
+  Vector3f GetRotationAxis();
+
+  void Normalize();
 
 private:
 };
@@ -41,6 +49,6 @@ Quaternion::~Quaternion()
 }
 
 extern Quaternion AngleAxis(float angle, Vector3f axis);
-  //点乘
-extern float Dot(const Quaternion &lhs, const Quaternion &rhs);
+
+extern Quaternion Slerp(const Quaternion &q0, const Quaternion &q1,float t);
 #endif // QUATERNION_H

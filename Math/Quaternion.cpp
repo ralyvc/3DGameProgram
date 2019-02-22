@@ -35,7 +35,7 @@ Quaternion Quaternion::Conjugate()
 
 //四元数求幂  logq =(0,theta/2*n) exp(q) = (cos(theta/2),n*sin(theta/2))
 //q^t = exp(t*logq)
-Quaternion Quaternion::Pow(float t)
+Quaternion Quaternion::Pow(float t) const
 {
     //检查单位四元数，防止除零
     if (fabs(w) > 1 - kEpsilon)
@@ -49,7 +49,73 @@ Quaternion Quaternion::Pow(float t)
     return Quaternion(cos(newAlpha), x * mult, y * mult, z * mult);
 }
 
-float Dot(const Quaternion &lhs, const Quaternion &rhs)
+float Quaternion::Dot( const Quaternion &rhs) const
 {
-    return lhs.w * rhs.w + lhs.x + rhs.x + rhs.y + lhs.y + lhs.z * rhs.z;
+    return w * rhs.w + x * rhs.x + rhs.y * y + z * rhs.z;
+}
+
+float Quaternion::GetRotationAngle()
+{
+    float alpha = acos(w);
+    return alpha * 2;
+}
+
+Vector3f Quaternion::GetRotationAxis()
+{
+    if (fabs(w) > 1 - kEpsilon)
+    {
+        return Vector3f(0,0,0);
+    }
+    float mult = 1.0f/(sqrt(1-w*w));
+    return Vector3f(x * mult, y * mult, z * mult);
+}
+
+void Quaternion::Normalize()
+{
+    float mag = sqrt(w * w + x * x + y * y + z * z);
+    
+    if (mag > 0) {
+        float oneOverMag = 1.0f / mag;
+        w *= oneOverMag;
+        x *= oneOverMag;
+        y *= oneOverMag;
+        z *= oneOverMag;
+    }else
+    {
+        Identity();
+    }
+    
+}
+
+// slerp(q0,q1,t) = q0(q0^-1 * q1)^t = sin((1-t)*w)/sin(w)*q0 + sin(t*w)/sin(w) *q1 (w是两个四元数之间的“夹角”)
+Quaternion Slerp(const Quaternion& q0,const Quaternion& q1,float t)
+{
+    if (t <=0 )
+    {
+        return q0;
+    }
+    if (t >= 1)
+    {
+        return q1;
+    }
+    float k0, k1;
+    float cosOmega = q0.Dot(q1);
+    int mult = 1;
+    if (cosOmega < 0) {
+        mult = -1;
+        cosOmega = -cosOmega;
+    }
+    if (cosOmega > 1- kEpsilon) {
+        k0 = 1 - t;
+        k1 = t;
+    }else
+    {
+        float sinOmega = sqrt(1 - cosOmega * cosOmega);
+        float omega = atan2(sinOmega, cosOmega);
+        float oneOverSinOmega = 1.0f / sinOmega;
+        k0 = sin((1.0f - t) * omega) * oneOverSinOmega;
+        k1 = sin(t * omega) * oneOverSinOmega;
+    }
+
+    return Quaternion(q0.w * k0 + q1.w * k1 * mult, q0.x * k0 + q1.x * k1 * mult, q0.y * k0 + q1.y * k1 * mult, q0.z * k0 + q1.z * k1 * mult);
 }

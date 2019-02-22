@@ -1,5 +1,6 @@
 #include "EulerAngles.h"
 #include "MathUtil.h"
+#include "Quaternion.h"
 
 const EulerAngles kEulerAnglesIdentity(0.0f, 0.0f, 0.0f);
 
@@ -33,4 +34,9 @@ void EulerAngles::Canonize()
 
     heading = WrapPi(heading);
 
+}
+
+Quaternion EulerAngles::ToQuaternion()
+{
+    
 }
