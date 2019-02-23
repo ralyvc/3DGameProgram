@@ -10,7 +10,10 @@
 #include "../Math/Vector3.hpp"
 #include "../Math/Matrix.h"
 #include <iostream>
-#pragma once
+
+#if !defined(RENDERER_H)
+#define RENDERER_H
+
 class Renderer
 {
     enum ClipCode
@@ -55,3 +58,5 @@ class Renderer
     void drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
     void drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
 };
+
+#endif // RENDERER_H

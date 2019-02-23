@@ -10,7 +10,7 @@ class Matrix
     Type _data[M][N]{};
 
     Matrix() = default;
-    Matrix(const Type data[M*N])
+    Matrix(const Type data[M * N])
     {
         memcpy(_data, data, sizeof(_data));
     };
@@ -23,21 +23,22 @@ class Matrix
     {
         memcpy(_data, other._data, sizeof(_data));
     };
-    inline Type &operator()(size_t i,size_t j)
+    inline Type &operator()(size_t i, size_t j)
     {
         return _data[i][j];
     }
 
-    inline Type &operator()(size_t i,size_t j)const
+    inline Type &operator()(size_t i, size_t j) const
     {
         return _data[i][j];
     }
 
-    Matrix& operator=(const Matrix& other)
+    Matrix &operator=(const Matrix &other)
     {
-        
-        if (this != &other) {
-             memcpy(_data, other._data, sizeof(_data));
+
+        if (this != &other)
+        {
+            memcpy(_data, other._data, sizeof(_data));
         }
         return *this;
     }
@@ -47,56 +48,102 @@ class Matrix
     Matrix<Type, M, N> operator+(const Matrix<Type, M, N> &other) const;
     Matrix<Type, M, N> operator-(const Matrix<Type, M, N> &other) const;
     Matrix<Type, M, N> operator-() const;
-    void operator+=(const Matrix<Type, M, N> &other) ;
-    void operator-=(const Matrix<Type, M, N> &other) ;
+    void operator+=(const Matrix<Type, M, N> &other);
+    void operator-=(const Matrix<Type, M, N> &other);
     Matrix<Type, M, N> operator*(Type scalar) const;
     Matrix<Type, M, N> operator/(Type scalar) const;
     Matrix<Type, M, N> operator+(Type scalar) const;
     Matrix<Type, M, N> operator-(Type scalar) const;
-    void operator+=(Type scalar) ;
-    void operator-=(Type scalar) ;
-    void operator*=(Type scalar) ;
-    void operator/=(Type scalar) ;
+    void operator+=(Type scalar);
+    void operator-=(Type scalar);
+    void operator*=(Type scalar);
+    void operator/=(Type scalar);
     ~Matrix(){};
 
     Matrix<Type, M, N> Transpose() const;
 
-    inline void Zero(){
+    inline void Zero()
+    {
         memset(_data, 0, sizeof(_data));
     }
 
     void SetAll(Type val)
     {
-        
-        for(size_t i = 0; i < M; i++)
+
+        for (size_t i = 0; i < M; i++)
         {
             for (size_t j = 0; j < N; j++)
             {
                 *this(i, j) = val;
             }
         }
-        
     }
 
     inline void Identity()
     {
         Zero();
-        
-        for(size_t i = 0; i < M & i < N; i++)
+
+        for (size_t i = 0; i < M & i < N; i++)
         {
             *this(i, i) = 1;
         }
-        
     }
 
-    static Matrix<Type, M, N> Identitys() 
+    inline void SwapRows(size_t a, size_t b)
     {
-        Matrix<Type, M, N> res;
-        res.Identity();
-        return res;
+        if (a == b)
+        {
+            return;
+        }
+        Matrix<Type, M, N> &self = *this;
+        for (size_t j = 0; j < N; j++)
+        {
+
+            Type tmp = self(a, j);
+
+            self(a, j) = self(b, j);
+
+            self(b, j) = tmp;
+        }
+    }
+
+    inline void SwapCols(size_t a, size_t b)
+    {
+        if (a == b)
+        {
+
+            return;
+        }
+        Matrix<Type, M, N> &self = *this;
+
+        for (size_t i = 0; i < M; i++)
+        {
+
+            Type tmp = self(i, a);
+
+            self(i, a) = self(i, b);
+
+            self(i, b) = tmp;
+        }
     }
     //Debug stuff
     void print();
 };
+
+template <typename Type, size_t M>
+class SquareMatrix : public Matrix<Type, M, M>
+{
+  private:
+    bool inv(SquareMatrix<Type, M> &inv)const;
+
+  public:
+    SquareMatrix() = default;
+    SquareMatrix(const Type data_[M][M]) : Matrix<Type, M, M>(data_) {}
+    SquareMatrix(const Matrix<Type, M, M> &other) : Matrix<Type, M, M>(other) {}
+    ~SquareMatrix();
+};
+
+typedef SquareMatrix<float, 4> Matrix4x4;
+typedef SquareMatrix<float, 4> Matrix3x3;
 
 #endif // !MATRIX_H

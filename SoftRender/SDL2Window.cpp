@@ -30,7 +30,7 @@ void SDL2Window::Run()
     while (_isRunning)
     {
         ++count;
-        Uint32 start = SDL_GetTicks();
+        //Uint32 start = SDL_GetTicks();
         UpdateInput();
         Clear();
         Draw();
@@ -102,9 +102,7 @@ void SDL2Window::SwapBuffers(){
 
     //Apply surface changes to window
     SDL_UpdateWindowSurface(_window);
-    Matrix<float, 4, 4> mt;
-    Matrix<float, 4, 4> mt2;
-    mt2 = mt;
+
 }
 
 SDL2Window::~SDL2Window()

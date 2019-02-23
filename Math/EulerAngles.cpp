@@ -38,5 +38,5 @@ void EulerAngles::Canonize()
 
 Quaternion EulerAngles::ToQuaternion()
 {
-    
+    return Quaternion(1, 0, 0, 0);
 }

@@ -13,8 +13,9 @@ aux_source_directory(. DIR_ROOT_SRCS)
 
 # 添加 Lib子目录
 add_subdirectory(SoftRender)
-
+add_subdirectory(Math)
 # 指定生成目标
 add_executable(3DSoftRender main.cpp ${DIR_ROOT_SRCS})
 # 添加链接库  
 TARGET_LINK_LIBRARIES(3DSoftRender RenderEngine )  
+TARGET_LINK_LIBRARIES(3DSoftRender ThreeDMath ) 
