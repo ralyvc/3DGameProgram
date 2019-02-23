@@ -9,7 +9,7 @@ class Matrix
   public:
     Type _data[M][N]{};
 
-    Matrix() = default;
+    Matrix() { Zero(); };
     Matrix(const Type data[M * N])
     {
         memcpy(_data, data, sizeof(_data));
@@ -35,7 +35,6 @@ class Matrix
 
     Matrix &operator=(const Matrix &other)
     {
-
         if (this != &other)
         {
             memcpy(_data, other._data, sizeof(_data));
@@ -82,7 +81,6 @@ class Matrix
     inline void Identity()
     {
         Zero();
-
         for (size_t i = 0; i < M & i < N; i++)
         {
             *this(i, i) = 1;
@@ -98,11 +96,8 @@ class Matrix
         Matrix<Type, M, N> &self = *this;
         for (size_t j = 0; j < N; j++)
         {
-
             Type tmp = self(a, j);
-
             self(a, j) = self(b, j);
-
             self(b, j) = tmp;
         }
     }
@@ -111,18 +106,13 @@ class Matrix
     {
         if (a == b)
         {
-
             return;
         }
         Matrix<Type, M, N> &self = *this;
-
         for (size_t i = 0; i < M; i++)
         {
-
             Type tmp = self(i, a);
-
             self(i, a) = self(i, b);
-
             self(i, b) = tmp;
         }
     }
@@ -137,10 +127,19 @@ class SquareMatrix : public Matrix<Type, M, M>
     bool inv(SquareMatrix<Type, M> &inv)const;
 
   public:
-    SquareMatrix() = default;
+    SquareMatrix() : Matrix<Type, M, M>() {}
     SquareMatrix(const Type data_[M][M]) : Matrix<Type, M, M>(data_) {}
     SquareMatrix(const Matrix<Type, M, M> &other) : Matrix<Type, M, M>(other) {}
     ~SquareMatrix();
+    inline SquareMatrix<Type,M> Inverse() const
+    {
+        SquareMatrix<Type, M> res;
+        if (!inv(res))
+        {
+            res.Zero();
+        }
+        return res;
+    }
 };
 
 typedef SquareMatrix<float, 4> Matrix4x4;
