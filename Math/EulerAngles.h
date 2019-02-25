@@ -2,6 +2,7 @@
 #if !defined(ENLER_ANGLES_H)
 #define ENLER_ANGLES_H
 class Quaternion;
+class RotationMatrix;
 class EulerAngles
 {
 public:
@@ -17,6 +18,7 @@ public:
 
 public:
   EulerAngles() {}
+  EulerAngles(const RotationMatrix &mat);
   EulerAngles(float h, float p, float b) : heading(h), pitch(p), bank(b) {}
   EulerAngles(const Vector3f &vec) : y(vec.y), x(vec.x), z(vec.z) {}
   EulerAngles(EulerAngles &&) = default;
@@ -31,7 +33,6 @@ public:
   }
 
   void Canonize();
-
   Quaternion ToQuaternion();
 
 private:

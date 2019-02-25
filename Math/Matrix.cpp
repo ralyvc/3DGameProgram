@@ -1,11 +1,37 @@
 #include "Matrix.h"
 #include <cmath>
-
-template <typename Type, size_t M, size_t N>
-template <size_t P>
-Matrix<Type, M, P> Matrix<Type, M, N>::operator*(const Matrix<Type, N, P> &other) const
+#include <cstdlib>
+#include "MathUtil.h"
+#include "EulerAngles.h"
+#include "Quaternion.h"
+template <size_t M, size_t N>
+bool Matrix<M, N>::operator==(const Matrix<M, N> &other) const
 {
-    Matrix<Type, M, P> res;
+    for (size_t i = 0; i < M; i++)
+    {
+        for (size_t j = 0; j < N; j++)
+        {
+            if (fabs(*this(i, j) - other(i, j)) > kEpsilon)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+template <size_t M, size_t N>
+bool Matrix<M, N>::operator!=(const Matrix<M, N> &other) const
+{
+    return !(*this == other);
+}
+
+template <size_t M, size_t N>
+template <size_t P>
+Matrix<M, P> Matrix<M, N>::operator*(const Matrix<N, P> &other) const
+{
+    Matrix<M, P> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t k = 0; k < P; k++)
@@ -19,10 +45,10 @@ Matrix<Type, M, P> Matrix<Type, M, N>::operator*(const Matrix<Type, N, P> &other
     return res;
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator+(const Matrix<Type, M, N> &other) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator+(const Matrix<M, N> &other) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
 
     for (size_t i = 0; i < M; i++)
     {
@@ -33,10 +59,10 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator+(const Matrix<Type, M, N> &other
     }
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator-(const Matrix<Type, M, N> &other) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator-(const Matrix<M, N> &other) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
 
     for (size_t i = 0; i < M; i++)
     {
@@ -47,10 +73,10 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator-(const Matrix<Type, M, N> &other
     }
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator-() const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator-() const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
 
     for (size_t i = 0; i < M; i++)
     {
@@ -61,22 +87,22 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator-() const
     }
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator+=(const Matrix<Type, M, N> &other)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator+=(const Matrix<M, N> &other)
 {
     *this = *this + other;
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator-=(const Matrix<Type, M, N> &other)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator-=(const Matrix<M, N> &other)
 {
     *this = *this - other;
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator+(Type scalar) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator+(float scalar) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t j = 0; j < N; j++)
@@ -87,10 +113,10 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator+(Type scalar) const
     return res;
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator-(Type scalar) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator-(float scalar) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t j = 0; j < N; j++)
@@ -101,10 +127,10 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator-(Type scalar) const
     return res;
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator*(Type scalar) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator*(float scalar) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t j = 0; j < N; j++)
@@ -115,10 +141,10 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator*(Type scalar) const
     return res;
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::operator/(Type scalar) const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::operator/(float scalar) const
 {
-    Matrix<Type, M, N> res;
+    Matrix<M, N> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t j = 0; j < N; j++)
@@ -129,8 +155,8 @@ Matrix<Type, M, N> Matrix<Type, M, N>::operator/(Type scalar) const
     return res;
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator+=(Type scalar)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator+=(float scalar)
 {
     for (size_t i = 0; i < M; i++)
     {
@@ -141,8 +167,8 @@ void Matrix<Type, M, N>::operator+=(Type scalar)
     }
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator-=(Type scalar)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator-=(float scalar)
 {
     for (size_t i = 0; i < M; i++)
     {
@@ -153,8 +179,8 @@ void Matrix<Type, M, N>::operator-=(Type scalar)
     }
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator*=(Type scalar)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator*=(float scalar)
 {
     for (size_t i = 0; i < M; i++)
     {
@@ -165,8 +191,8 @@ void Matrix<Type, M, N>::operator*=(Type scalar)
     }
 }
 
-template <typename Type, size_t M, size_t N>
-void Matrix<Type, M, N>::operator/=(Type scalar)
+template <size_t M, size_t N>
+void Matrix<M, N>::operator/=(float scalar)
 {
     for (size_t i = 0; i < M; i++)
     {
@@ -177,10 +203,10 @@ void Matrix<Type, M, N>::operator/=(Type scalar)
     }
 }
 
-template <typename Type, size_t M, size_t N>
-Matrix<Type, M, N> Matrix<Type, M, N>::Transpose() const
+template <size_t M, size_t N>
+Matrix<M, N> Matrix<M, N>::Transpose() const
 {
-    Matrix<Type, N, M> res;
+    Matrix<N, M> res;
     for (size_t i = 0; i < M; i++)
     {
         for (size_t j = 0; j < N; j++)
@@ -197,14 +223,13 @@ Matrix<Type, M, N> Matrix<Type, M, N>::Transpose() const
 
  */
 
-template <typename Type, size_t M>
-bool SquareMatrix<Type, M>::inv(SquareMatrix<Type, M> &inv) const
-
+template <size_t M>
+bool SquareMatrix<M>::inv(SquareMatrix<M> &inv) const
 {
-    SquareMatrix<Type, M> L;
+    SquareMatrix<M> L;
     L.Identity();
-    SquareMatrix<Type, M> U = *this;
-    SquareMatrix<Type, M> P;
+    SquareMatrix<M> U = *this;
+    SquareMatrix<M> P;
     P.Identity();
     for (size_t n = 0; n < M; n++)
     {
@@ -271,4 +296,77 @@ bool SquareMatrix<Type, M>::inv(SquareMatrix<Type, M> &inv) const
     }
     inv = P;
     return true;
+}
+
+template <size_t M>
+float SquareMatrix<M>::Determinant() const
+{
+
+    int out;
+    int i, j;
+    double k, result = 1;
+    SquareMatrix<M> a = *this;
+    for (out = 0; out < M; out++)
+    {
+        for (i = out; i < M; i++)
+        {
+            if (EqualZero(a(i, out)))
+                continue;
+            else
+                for (j = out; j < M; j++)
+                {
+                    k = a(i, j);
+                    a(i, j) = a(out, j);
+                    a(out, j) = k;
+                }
+            if (i == out)
+                result *= a(out, out);
+            else
+                result *= -a(out, out);
+            break;
+        }
+        if (i == M)
+            return 0;
+        if (!FloatEqual(a(out, out), 1))
+            for (j = out + 1; j < M; j++)
+                a(out, j) /= a(out, out);
+        a(out, out) = 1;
+
+        for (i = out + 1; i < M; i++)
+            for (j = out + 1; j < M; j++)
+                a(i, j) -= a(i, out) * a(out, j);
+    }
+    return result;
+}
+
+RotationMatrix::RotationMatrix(const EulerAngles& r)
+{
+    float ch = cos(r.heading);
+    float cp = cos(r.pitch);
+    float cb = cos(r.bank);
+    float sh = sin(r.heading);
+    float sp = sin(r.pitch);
+    float sb = sin(r.bank);
+    _data[0][0] = ch * cb + sh * sp * sb;
+    _data[0][1] = sp * sb;
+    _data[0][2] = -sh * cb + ch * sp * sb;
+    _data[1][0] = -ch * cb + sh * sp * cb;
+    _data[1][1] = cp * cb;
+    _data[1][2] = sb * sh + ch * sp * cb;
+    _data[2][0] = sh * cp;
+    _data[2][1] = -sp;
+    _data[2][2] = ch * cp;
+}
+
+RotationMatrix::RotationMatrix(const Quaternion& r)
+{
+    _data[0][0] = 1 - 2 * r.y * r.y - 2 * r.z * r.z;
+    _data[0][1] = 2 * r.x * r.y + 2 * r.w * r.z;
+    _data[0][2] = 2 * r.x * r.z - 2 * r.w * r.y;
+    _data[1][0] = 2 * r.x * r.y - 2 * r.w * r.z;
+    _data[1][1] = 1 - 2 * r.x * r.x - 2 * r.z * r.z;
+    _data[1][2] = 2 * r.y * r.z + 2 * r.w * r.x;
+    _data[2][0] = 2 * r.x * r.z + 2 * r.w * r.y;
+    _data[2][1] = 2 * r.y * r.z - 2 * r.w * r.x;
+    _data[2][2] = 1 - 2 * r.x * r.x - 2 * r.y * r.y;
 }

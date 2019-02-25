@@ -1,8 +1,8 @@
 #include "Vector3.hpp"
-
+#include "MathUtil.h"
 #if !defined(QUATERNION_H)
 #define QUATERNION_H
-
+class RotationMatrix;
 class Quaternion
 {
 public:
@@ -14,6 +14,16 @@ public:
   Quaternion(const Quaternion &) = default;
   Quaternion &operator=(Quaternion &&) = default;
   Quaternion &operator=(const Quaternion &) = default;
+  bool operator==(const Quaternion &other) const
+  {
+    return fabs(w - other.w) < kEpsilon && fabs(x - other.x) < kEpsilon && fabs(y - other.y) < kEpsilon && fabs(z - other.z) < kEpsilon;
+  }
+  bool operator!=(const Quaternion &other) const
+  {
+    return  !(*this == other);
+  }
+  Quaternion(const RotationMatrix &mat);
+  
   ~Quaternion();
   void Identity()
   {

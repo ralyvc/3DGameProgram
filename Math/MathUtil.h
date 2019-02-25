@@ -23,6 +23,11 @@ static inline bool FloatEqual(float a, float b)
     return fabsf(a - b) <= kEpsilon;
 }
 
+static inline bool EqualZero(float a)
+{
+    return fabsf(a) <= kEpsilon;
+}
+
 static inline float RadiansFromDegrees(float degrees)
 {
     return kPi * degrees / 180.0f;

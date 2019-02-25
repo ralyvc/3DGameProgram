@@ -1,21 +1,22 @@
+
 #ifndef MATRIX_H
 #define MATRIX_H
-
+#include <cstring>
 #include <iostream>
-template <typename Type, size_t M, size_t N>
+template <size_t M, size_t N>
 class Matrix
 {
   private:
   public:
-    Type _data[M][N]{};
+    float _data[M][N]{};
 
     Matrix() { Zero(); };
-    Matrix(const Type data[M * N])
+    Matrix(const float data[M * N])
     {
         memcpy(_data, data, sizeof(_data));
     };
 
-    Matrix(const Type data[M][N])
+    Matrix(const float data[M][N])
     {
         memcpy(_data, data, sizeof(_data));
     };
@@ -23,12 +24,12 @@ class Matrix
     {
         memcpy(_data, other._data, sizeof(_data));
     };
-    inline Type &operator()(size_t i, size_t j)
+    inline float &operator()(size_t i, size_t j)
     {
         return _data[i][j];
     }
 
-    inline Type &operator()(size_t i, size_t j) const
+    inline float operator()(size_t i, size_t j) const
     {
         return _data[i][j];
     }
@@ -41,32 +42,33 @@ class Matrix
         }
         return *this;
     }
-
+    bool operator==(const Matrix<M, N> &other) const;
+    bool operator!=(const Matrix<M, N> &other) const;
     template <size_t P>
-    Matrix<Type, M, P> operator*(const Matrix<Type, N, P> &other) const;
-    Matrix<Type, M, N> operator+(const Matrix<Type, M, N> &other) const;
-    Matrix<Type, M, N> operator-(const Matrix<Type, M, N> &other) const;
-    Matrix<Type, M, N> operator-() const;
-    void operator+=(const Matrix<Type, M, N> &other);
-    void operator-=(const Matrix<Type, M, N> &other);
-    Matrix<Type, M, N> operator*(Type scalar) const;
-    Matrix<Type, M, N> operator/(Type scalar) const;
-    Matrix<Type, M, N> operator+(Type scalar) const;
-    Matrix<Type, M, N> operator-(Type scalar) const;
-    void operator+=(Type scalar);
-    void operator-=(Type scalar);
-    void operator*=(Type scalar);
-    void operator/=(Type scalar);
+    Matrix<M, P> operator*(const Matrix<N, P> &other) const;
+    Matrix<M, N> operator+(const Matrix<M, N> &other) const;
+    Matrix<M, N> operator-(const Matrix<M, N> &other) const;
+    Matrix<M, N> operator-() const;
+    void operator+=(const Matrix<M, N> &other);
+    void operator-=(const Matrix<M, N> &other);
+    Matrix<M, N> operator*(float scalar) const;
+    Matrix<M, N> operator/(float scalar) const;
+    Matrix<M, N> operator+(float scalar) const;
+    Matrix<M, N> operator-(float scalar) const;
+    void operator+=(float scalar);
+    void operator-=(float scalar);
+    void operator*=(float scalar);
+    void operator/=(float scalar);
     ~Matrix(){};
 
-    Matrix<Type, M, N> Transpose() const;
+    Matrix<M, N> Transpose() const;
 
     inline void Zero()
     {
         memset(_data, 0, sizeof(_data));
     }
 
-    void SetAll(Type val)
+    void SetAll(float val)
     {
 
         for (size_t i = 0; i < M; i++)
@@ -93,10 +95,10 @@ class Matrix
         {
             return;
         }
-        Matrix<Type, M, N> &self = *this;
+        Matrix<M, N> &self = *this;
         for (size_t j = 0; j < N; j++)
         {
-            Type tmp = self(a, j);
+            float tmp = self(a, j);
             self(a, j) = self(b, j);
             self(b, j) = tmp;
         }
@@ -108,10 +110,10 @@ class Matrix
         {
             return;
         }
-        Matrix<Type, M, N> &self = *this;
+        Matrix<M, N> &self = *this;
         for (size_t i = 0; i < M; i++)
         {
-            Type tmp = self(i, a);
+            float tmp = self(i, a);
             self(i, a) = self(i, b);
             self(i, b) = tmp;
         }
@@ -120,29 +122,44 @@ class Matrix
     void print();
 };
 
-template <typename Type, size_t M>
-class SquareMatrix : public Matrix<Type, M, M>
+template <size_t M>
+class SquareMatrix : public Matrix<M, M>
 {
   private:
-    bool inv(SquareMatrix<Type, M> &inv)const;
+    bool inv(SquareMatrix<M> &inv) const;
 
   public:
-    SquareMatrix() : Matrix<Type, M, M>() {}
-    SquareMatrix(const Type data_[M][M]) : Matrix<Type, M, M>(data_) {}
-    SquareMatrix(const Matrix<Type, M, M> &other) : Matrix<Type, M, M>(other) {}
+    SquareMatrix() : Matrix<M, M>() {}
+    SquareMatrix(const float data_[M][M]) : Matrix<M, M>(data_) {}
+    SquareMatrix(const Matrix<M, M> &other) : Matrix<M, M>(other) {}
     ~SquareMatrix();
-    inline SquareMatrix<Type,M> Inverse() const
+    inline SquareMatrix<M> Inverse() const
     {
-        SquareMatrix<Type, M> res;
+        SquareMatrix<M> res;
         if (!inv(res))
         {
             res.Zero();
         }
         return res;
     }
+    float Determinant() const;
 };
 
-typedef SquareMatrix<float, 4> Matrix4x4;
-typedef SquareMatrix<float, 4> Matrix3x3;
+typedef SquareMatrix<4> Matrix4x4;
+typedef SquareMatrix<3> Matrix3x3;
+
+class EulerAngles;
+class Quaternion;
+class RotationMatrix : public Matrix3x3
+{
+  private:
+    /* data */
+  public:
+    RotationMatrix() : Matrix3x3(){};
+    RotationMatrix(const float data_[3][3]) : Matrix3x3(data_) {}
+    RotationMatrix(const Matrix3x3 &other) : Matrix3x3(other) {}
+    RotationMatrix(const EulerAngles &rotation);
+    RotationMatrix(const Quaternion &q);
+};
 
 #endif // !MATRIX_H

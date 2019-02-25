@@ -1,6 +1,66 @@
 #include "Quaternion.h"
 #include "MathUtil.h"
+#include "Matrix.h"
+Quaternion::Quaternion(const RotationMatrix &mat)
+{
+    float m11 = mat(0, 0), m12 = mat(0, 1), m13 = mat(0, 2);
+    float m21 = mat(1, 0), m22 = mat(1, 1), m23 = mat(1, 2);
+    float m31 = mat(2, 0), m32 = mat(2, 0), m33 = mat(2, 2);
 
+    // Determine which of w, x , y , or z has the l a r g e s t absolute value
+    float fourWSquaredMinus1 = m11 + m22 + m33;
+    float fourXSquaredMinus1 = m11 - m22 - m33;
+    float fourYSquaredMinus1 = m22 - m11 - m33;
+    float fourZSquaredMinus1 = m33 - m11 - m22;
+    int biggestIndex = 0;
+    float fourBiggestSquaredMinus1 = fourWSquaredMinus1;
+    if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
+    {
+        fourBiggestSquaredMinus1 = fourXSquaredMinus1;
+        biggestIndex = 1;
+    }
+    if (fourYSquaredMinus1 > fourBiggestSquaredMinus1)
+    {
+        fourBiggestSquaredMinus1 = fourYSquaredMinus1;
+        biggestIndex = 2;
+    }
+    if (fourZSquaredMinus1 > fourBiggestSquaredMinus1)
+    {
+        fourBiggestSquaredMinus1 = fourZSquaredMinus1;
+        biggestIndex = 3;
+    }
+    // Perform square root and d i v i s i o n
+    float biggestVal = sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
+    float mult = 0.25f / biggestVal;
+    // Apply t a b l e to compute quaternion values
+    switch (biggestIndex)
+    {
+    case 0:
+        w = biggestVal;
+        x = (m23 - m32) * mult;
+        y = (m31 - m13) * mult;
+        z = (m12 - m21) * mult;
+        break;
+    case 1:
+        x = biggestVal;
+        w = (m23 - m32) * mult;
+        y = (m12 + m21) * mult;
+        z = (m31 + m13) * mult;
+        break;
+    case 2:
+        y = biggestVal;
+        w = (m31 - m13) * mult;
+        x = (m12 + m21) * mult;
+        z = (m23 + m32) * mult;
+        break;
+    case 3:
+        z = biggestVal;
+        w = (m12 - m21) * mult;
+        x = (m31 + m13) * mult;
+        y = (m23 + m32) * mult;
+        break;
+    }
+}
 Quaternion AngleAxis(float theta, Vector3f axis)
 {
     float thetaOver2 = theta * 0.5f;
@@ -49,7 +109,7 @@ Quaternion Quaternion::Pow(float t) const
     return Quaternion(cos(newAlpha), x * mult, y * mult, z * mult);
 }
 
-float Quaternion::Dot( const Quaternion &rhs) const
+float Quaternion::Dot(const Quaternion &rhs) const
 {
     return w * rhs.w + x * rhs.x + rhs.y * y + z * rhs.z;
 }
@@ -64,33 +124,34 @@ Vector3f Quaternion::GetRotationAxis()
 {
     if (fabs(w) > 1 - kEpsilon)
     {
-        return Vector3f(0,0,0);
+        return Vector3f(0, 0, 0);
     }
-    float mult = 1.0f/(sqrt(1-w*w));
+    float mult = 1.0f / (sqrt(1 - w * w));
     return Vector3f(x * mult, y * mult, z * mult);
 }
 
 void Quaternion::Normalize()
 {
     float mag = sqrt(w * w + x * x + y * y + z * z);
-    
-    if (mag > 0) {
+
+    if (mag > 0)
+    {
         float oneOverMag = 1.0f / mag;
         w *= oneOverMag;
         x *= oneOverMag;
         y *= oneOverMag;
         z *= oneOverMag;
-    }else
+    }
+    else
     {
         Identity();
     }
-    
 }
 
 // slerp(q0,q1,t) = q0(q0^-1 * q1)^t = sin((1-t)*w)/sin(w)*q0 + sin(t*w)/sin(w) *q1 (w是两个四元数之间的“夹角”)
-Quaternion Slerp(const Quaternion& q0,const Quaternion& q1,float t)
+Quaternion Slerp(const Quaternion &q0, const Quaternion &q1, float t)
 {
-    if (t <=0 )
+    if (t <= 0)
     {
         return q0;
     }
@@ -101,14 +162,17 @@ Quaternion Slerp(const Quaternion& q0,const Quaternion& q1,float t)
     float k0, k1;
     float cosOmega = q0.Dot(q1);
     int mult = 1;
-    if (cosOmega < 0) {
+    if (cosOmega < 0)
+    {
         mult = -1;
         cosOmega = -cosOmega;
     }
-    if (cosOmega > 1- kEpsilon) {
+    if (cosOmega > 1 - kEpsilon)
+    {
         k0 = 1 - t;
         k1 = t;
-    }else
+    }
+    else
     {
         float sinOmega = sqrt(1 - cosOmega * cosOmega);
         float omega = atan2(sinOmega, cosOmega);
