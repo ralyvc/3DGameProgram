@@ -370,3 +370,26 @@ RotationMatrix::RotationMatrix(const Quaternion& r)
     _data[2][1] = 2 * r.y * r.z - 2 * r.w * r.x;
     _data[2][2] = 1 - 2 * r.x * r.x - 2 * r.y * r.y;
 }
+
+Matrix4x4 ScaleMatrix(float scaleX, float scaleY, float scaleZ)
+{
+    Matrix4x4 mat;
+    mat(0, 0) = scaleX;
+    mat(1, 1) = scaleY;
+    mat(2, 2) = scaleZ;
+    mat(3, 3) = 1;
+    return mat;
+}
+
+Matrix4x4 TranslateMatrix(float dx, float dy, float dz)
+{
+    Matrix4x4 mat;
+    mat(0, 0) = 1;
+    mat(1, 1) = 1;
+    mat(2, 2) = 1;
+    mat(3, 3) = 1;
+    mat(3, 0) = dx;
+    mat(3, 1) = dy;
+    mat(3, 2) = dz;
+    return mat;
+}

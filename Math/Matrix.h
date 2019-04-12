@@ -3,6 +3,7 @@
 #define MATRIX_H
 #include <cstring>
 #include <iostream>
+
 template <size_t M, size_t N>
 class Matrix
 {
@@ -162,4 +163,6 @@ class RotationMatrix : public Matrix3x3
     RotationMatrix(const Quaternion &q);
 };
 
+extern Matrix4x4 ScaleMatrix(float scaleX, float scaleY, float scaleZ);
+extern Matrix4x4 TranslateMatrix(float dx, float dy, float dz);
 #endif // !MATRIX_H

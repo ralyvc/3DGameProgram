@@ -34,7 +34,6 @@ vector<string> SplitStr(string &str, char delim)
 void LoadFile(Mesh &mesh, std::ifstream &file)
 {
     string line, key, x, y, z;
-    float tempU, tempV, intpart;
     Vector3i indices[3];
     char delimeter = '/';
 
