@@ -36,3 +36,10 @@ Camera::Camera(const Vector3f&  pos,const Vector3f &dir, const Vector3f& target,
     vn = Vector3f(0, -view_dist, -viewplane_width/2);
     bt_clip_plane = Plane(vn, pt);
 }
+
+void Camera::Update()
+{
+    Matrix4x4 matRotInv = RotationMatrix(dir).Transpose();
+    Matrix4x4 matTranslate = TranslateMatrix(-pos.x,-pos.y,-pos.z);
+    mCam = matTranslate * matRotInv;
+}

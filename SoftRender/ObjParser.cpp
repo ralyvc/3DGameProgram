@@ -2,11 +2,11 @@
 using namespace std;
 //https://www.jianshu.com/p/f7f3e7b6ebf5
 
-Mesh &BuildMeshFromFile(Mesh &mesh, string path)
+Mesh *BuildMeshFromFile( string path)
 {
     ifstream file;
     file.open(path.c_str());
-    LoadFile(mesh, file);
+    auto mesh = LoadFile( file);
     file.close();
     return mesh;
 }
@@ -31,12 +31,12 @@ vector<string> SplitStr(string &str, char delim)
     return splitString;
 }
 
-void LoadFile(Mesh &mesh, std::ifstream &file)
+Mesh * LoadFile( std::ifstream &file)
 {
     string line, key, x, y, z;
     Vector3i indices[3];
     char delimeter = '/';
-
+    Mesh *mesh = new Mesh();
     while (!file.eof())
     {
         getline(file, line);
@@ -46,19 +46,19 @@ void LoadFile(Mesh &mesh, std::ifstream &file)
         {
             iss >> x >> y >> z;
             Vector3f vec(stof(x), stof(y), stof(z));
-            mesh.vectices.push_back(vec);
+            mesh->vectices.push_back(vec);
         }
         else if (key == "vn")
         {
             iss >> x >> y >> z;
             Vector3f vec(stof(x), stof(y), stof(z));
-            mesh.normals.push_back(vec);
+            mesh->normals.push_back(vec);
         }
         else if (key == "vt")
         {
             iss >> x >> y ;
             Vector3f vec(stof(x), stof(y),0);
-            mesh.texels.push_back(vec);
+            mesh->texels.push_back(vec);
         }
         else if (key == "f")  //index data
         {
@@ -70,11 +70,12 @@ void LoadFile(Mesh &mesh, std::ifstream &file)
             {
                 indices[i] = Vector3i(stoi(splitx[i]) - 1, stoi(splity[i]) - 1, stoi(splitz[i]) - 1);
             }
-            mesh.vectexIndices.push_back(indices[0]);
-            mesh.textureIndices.push_back(indices[1]);
-            mesh.normalsIndices.push_back(indices[2]);
+            mesh->vectexIndices.push_back(indices[0]);
+            mesh->textureIndices.push_back(indices[1]);
+            mesh->normalsIndices.push_back(indices[2]);
         }
     }
-    mesh.numVertices = mesh.vectices.size();
-    mesh.numFaces = mesh.vectexIndices.size();
+    mesh->numVertices = mesh->vectices.size();
+    mesh->numFaces = mesh->vectexIndices.size();
+    return mesh;
 }

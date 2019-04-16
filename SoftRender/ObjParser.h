@@ -5,12 +5,12 @@
 #include <fstream>
 #include <sstream>
 
-Mesh &BuildMeshFromFile(Mesh &mesh, std::string path);
+extern Mesh *BuildMeshFromFile( std::string path);
 
-bool FileExists(std::string path);
+extern bool FileExists(std::string path);
 
-void LoadFile(Mesh &mesh, std::ifstream &file);
+extern Mesh *LoadFile( std::ifstream &file);
 
-std::vector<std::string> SplitStr(std::string &str, char delim);
+extern std::vector<std::string> SplitStr(std::string &str, char delim);
 
 #endif // OBJ_PARSER_H

@@ -151,14 +151,14 @@ typedef SquareMatrix<3> Matrix3x3;
 
 class EulerAngles;
 class Quaternion;
-class RotationMatrix : public Matrix3x3
+class RotationMatrix : public Matrix4x4
 {
   private:
     /* data */
   public:
-    RotationMatrix() : Matrix3x3(){};
-    RotationMatrix(const float data_[3][3]) : Matrix3x3(data_) {}
-    RotationMatrix(const Matrix3x3 &other) : Matrix3x3(other) {}
+    RotationMatrix() : Matrix4x4(){};
+    RotationMatrix(const float data_[4][4]) : Matrix4x4(data_) {}
+    RotationMatrix(const Matrix4x4 &other) : Matrix4x4(other) {}
     RotationMatrix(const EulerAngles &rotation);
     RotationMatrix(const Quaternion &q);
 };

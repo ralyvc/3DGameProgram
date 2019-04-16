@@ -10,9 +10,12 @@
 #include "../Math/Vector3.hpp"
 #include "../Math/Matrix.h"
 #include <iostream>
+#include <vector>
 
 #if !defined(RENDERER_H)
 #define RENDERER_H
+
+class Model;
 
 class Renderer
 {
@@ -36,7 +39,8 @@ class Renderer
 
     void putPixel(int x, int y, const Color &color);
     ClipCode getClipCode(int x, int y) const;
-   
+
+    void PackData(Vector3i &index, Vector3f *primitive, std::vector<Vector3f> &vals);
 
   public:
     Renderer(int width, int height)
@@ -57,6 +61,8 @@ class Renderer
     void DrawTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
     void drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
     void drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
+
+    void DrawModel(Model *model);
 };
 
 #endif // RENDERER_H

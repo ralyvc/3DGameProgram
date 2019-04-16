@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <cstring>
+#include "Model.h"
 
 void Renderer::clear()
 {
@@ -408,4 +409,41 @@ void Renderer::drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, co
         }
     }
 
+}
+
+
+void Renderer::PackData(Vector3i &index, Vector3f *primitive, std::vector<Vector3f> &vals)
+{
+    
+    for(size_t i = 0; i < 3; i++)
+    {
+        primitive[i] = vals[index.data[i]];
+    }
+    
+}
+
+void Renderer::DrawModel(Model *model)
+{
+    auto mesh = model->GetMesh();
+    auto vIndices = &mesh->vectexIndices;
+    auto tIndices = &mesh->textureIndices;
+    auto nIndices = &mesh->normalsIndices;
+    auto fNormals = &mesh->fNormals;
+
+    auto vertices = &mesh->vectices;
+    auto texels = &mesh->texels;
+    auto normals = &mesh->normals;
+    auto tangents = &mesh->tangents;
+
+    int numFaces = mesh->numFaces;
+
+    
+    for(size_t i = 0; i < numFaces; i++)
+    {
+        Vector3f trianglePrimitive[3], normalPrimitive[3], uvPrimitive[3], tangentPrimitive[3];
+
+        PackData((*vIndices)[i], trianglePrimitive, *vertices);
+
+    }
+    
 }

@@ -12,6 +12,7 @@ class Camera
     Camera &operator=(Camera &&) = default;
     Camera &operator=(const Camera &) = default;
 
+    void Update();
 
   private:
     Vector3f pos;

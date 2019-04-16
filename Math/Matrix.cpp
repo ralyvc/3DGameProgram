@@ -356,6 +356,7 @@ RotationMatrix::RotationMatrix(const EulerAngles& r)
     _data[2][0] = sh * cp;
     _data[2][1] = -sp;
     _data[2][2] = ch * cp;
+    _data[3][3] = 1;
 }
 
 RotationMatrix::RotationMatrix(const Quaternion& r)

@@ -11,6 +11,17 @@
 
 // };
 
+class Mesh;
+struct AABox
+{
+  Vector3f minPoints;
+  Vector3f maxPoints;
+
+  AABox(const Mesh &mesh);
+  void Update(const Matrix4x4 &modelMat);
+};
+
+
 class Line
 {
   public:

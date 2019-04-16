@@ -5,24 +5,42 @@
 #include "../Math/Vector3.hpp"
 #include "Mesh.h"
 #include "ObjParser.h"
+#include "../Math/EulerAngles.h"
 struct TransformParameters;
 
 
 class Model
 {
 public:
-    Model(const TransformParameters& param,const std::string meshPath )
+    Model(const std::string meshPath )
     {
-        BuildMeshFromFile(_mesh, meshPath);
+      Position = Vector3f(0, 0, 0);
+      dir = EulerAngles(0, 0, 0);
+      Scale = Vector3f(1, 1, 1);
+      _mesh = BuildMeshFromFile(meshPath);
     };
     Model(Model &&) = default;
     Model(const Model &) = default;
     Model &operator=(Model &&) = default;
     Model &operator=(const Model &) = default;
-    ~Model(){};
+    ~Model(){
+      
+      if (_mesh != nullptr  ) {
+        delete _mesh;
+        _mesh = nullptr;
+      }
+      
+    };
+    void Update(unsigned int delta);
 
-private:
-  Mesh _mesh;
+    Mesh* GetMesh() { return _mesh; }
+
+    Vector3f Position;
+    EulerAngles dir;
+    Vector3f Scale;
+
+  private:
+    Mesh *_mesh;
 };
 
 
