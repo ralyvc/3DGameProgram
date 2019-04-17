@@ -2,7 +2,7 @@
 #if !defined(MESH_H)
 #define MESH_H
 
-#include "../Math/Vector3.hpp"
+#include "Vector3.hpp"
 #include <vector>
 
 

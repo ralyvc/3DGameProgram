@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include <cstring>
 #include "Model.h"
+#include "Shader.h"
+#include "Camera.h"
 
 void Renderer::clear()
 {
@@ -436,8 +438,12 @@ void Renderer::DrawModel(Model *model)
     auto tangents = &mesh->tangents;
 
     int numFaces = mesh->numFaces;
+    FlatShader shader;
+    shader.M = model->GetModelMatrix();
+    shader.MV = shader.M.operator*( camera->mCam);
+    shader.V = camera->mCam;
+    shader.MVP = shader.MV * camera->mPer;
 
-    
     for(size_t i = 0; i < numFaces; i++)
     {
         Vector3f trianglePrimitive[3], normalPrimitive[3], uvPrimitive[3], tangentPrimitive[3];

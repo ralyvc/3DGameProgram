@@ -2,10 +2,11 @@
 #if !defined(MODEL_H)
 #define MODEL_H
 #include <iostream>
-#include "../Math/Vector3.hpp"
+#include "Vector3.hpp"
 #include "Mesh.h"
 #include "ObjParser.h"
-#include "../Math/EulerAngles.h"
+#include "EulerAngles.h"
+#include "Matrix.h"
 struct TransformParameters;
 
 
@@ -34,6 +35,10 @@ public:
     void Update(unsigned int delta);
 
     Mesh* GetMesh() { return _mesh; }
+    Matrix4x4 GetModelMatrix()
+    {
+      return TranslateMatrix(Position.x, Position.y, Position.z) * RotationMatrix(dir) * ScaleMatrix(Scale.x, Scale.y, Scale.z);
+    }
 
     Vector3f Position;
     EulerAngles dir;

@@ -24,7 +24,6 @@ public:
   }
   Quaternion(const RotationMatrix &mat);
   
-  ~Quaternion();
   void Identity()
   {
     w = 1.0f;
@@ -53,10 +52,6 @@ public:
 
 private:
 };
-
-Quaternion::~Quaternion()
-{
-}
 
 extern Quaternion AngleAxis(float angle, Vector3f axis);
 

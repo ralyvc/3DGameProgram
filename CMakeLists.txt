@@ -7,15 +7,13 @@ cmake_minimum_required(VERSION 2.8)
 # 项目名称
 project(3DSoftRender)
 
-# 查找当前目录下的所有源文件
-# 并将名称保存到 DIR_ROOT_SRCS变量
-aux_source_directory(. DIR_ROOT_SRCS)
+include_directories(./  ./SoftRender)#添加多目录的路径
 
-# 添加 Lib子目录
 add_subdirectory(SoftRender)
-add_subdirectory(Math)
+
 # 指定生成目标
-add_executable(3DSoftRender main.cpp ${DIR_ROOT_SRCS})
+add_executable(3DSoftRender main.cpp )
 # 添加链接库  
+#TARGET_LINK_LIBRARIES(3DSoftRender Math )
 TARGET_LINK_LIBRARIES(3DSoftRender RenderEngine )  
-TARGET_LINK_LIBRARIES(3DSoftRender ThreeDMath ) 
+ 

@@ -1,6 +1,6 @@
 #include "Camera.h"
-#include "../Math/MathUtil.h"
-#include "../Math/Geometry.h"
+#include "MathUtil.h"
+#include "Geometry.h"
 Camera::Camera(const Vector3f&  pos,const Vector3f &dir, const Vector3f& target,float near_z,float far_z,float fov,float viewport_width,float viewport_height)
 {    this->pos = pos;
     this->dir = dir;

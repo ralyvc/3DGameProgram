@@ -1,8 +1,8 @@
 #if !defined(CAMERA_H)
 #define CAMERA_H
-#include "../Math/EulerAngles.h"
-#include "../Math/Geometry.h"
-#include "../Math/Vector3.hpp"
+#include "EulerAngles.h"
+#include "Geometry.h"
+#include "Vector3.hpp"
 class Camera
 {
   public:
@@ -52,6 +52,7 @@ class Camera
     //屏幕宽高比
     float aspect_ratio;
 
+public:
     //变换矩阵
     Matrix4x4 mCam;    //世界坐标->相机坐标
     Matrix4x4 mPer;    //相机坐标->透视坐标

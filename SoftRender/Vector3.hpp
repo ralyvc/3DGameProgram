@@ -7,7 +7,7 @@
 #include <string>
 #include <type_traits>
 #include "math.h"
-#include "Matrix.h"
+//#include "Matrix.h"
 //Basic 3D vector class for general calculations
 template<typename T>
 struct Vector3{
@@ -114,14 +114,7 @@ struct Vector3{
         z = 0;
     }
 
-    Vector3<float> operator*(const Matrix4x4 &mat )const
-    {
-        Vector3<float> res;
-        res.x = x * mat(0,0) + y * mat(1,0) + z * mat(2,0) + mat(3,0);
-        res.y = x * mat(0,1) + y * mat(1,1) + z * mat(2,1) + mat(3,1);
-        res.z = x * mat(0,2) + y * mat(1,2) + z * mat(2,2) + mat(3,2);
-        return res;
-    }
+
 };
 
 //Shorthands for the common vector types

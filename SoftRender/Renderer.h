@@ -7,8 +7,8 @@
 
 #include "Buffer.h"
 #include "Color.h"
-#include "../Math/Vector3.hpp"
-#include "../Math/Matrix.h"
+#include "Vector3.hpp"
+#include "Matrix.h"
 #include <iostream>
 #include <vector>
 
@@ -16,6 +16,8 @@
 #define RENDERER_H
 
 class Model;
+
+class Camera;
 
 class Renderer
 {
@@ -41,6 +43,8 @@ class Renderer
     ClipCode getClipCode(int x, int y) const;
 
     void PackData(Vector3i &index, Vector3f *primitive, std::vector<Vector3f> &vals);
+
+    Camera *camera;
 
   public:
     Renderer(int width, int height)

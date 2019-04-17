@@ -1,5 +1,6 @@
 #include "Geometry.h"
 #include "../SoftRender/Mesh.h"
+#include <limits>
 
 AABox::AABox(const Mesh& mesh)
 {

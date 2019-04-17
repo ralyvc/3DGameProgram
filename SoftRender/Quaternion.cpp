@@ -148,7 +148,7 @@ void Quaternion::Normalize()
     }
 }
 
-// slerp(q0,q1,t) = q0(q0^-1 * q1)^t = sin((1-t)*w)/sin(w)*q0 + sin(t*w)/sin(w) *q1 (w是两个四元数之间的“夹角”)
+// slerp(q0,q1,t) = q0(q0^-1 * q1)^t = sin((1-t)*w)/sin(w)*q0 + sin(t*w)/sin(w) *q1 (w是两个四元数之间的"夹角”)
 Quaternion Slerp(const Quaternion &q0, const Quaternion &q1, float t)
 {
     if (t <= 0)

@@ -9,7 +9,7 @@ const float k1OverPi = 1.0 / kPi;
 const float kEpsilon = 1e-06f;
 
 //角度限制在-pi到pi之间
-extern float WrapPi(float theta)
+static float WrapPi(float theta)
 {
     if (fabs(theta) > kPi)
     {

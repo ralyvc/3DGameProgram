@@ -43,17 +43,18 @@ class Line
 class Plane
 {
 public:
-    Plane(const Vector3f &n,const Vector3f &p):normal(n),point(p){};
-    Plane(Plane &&) = default;
-    Plane(const Plane &) = default;
-    Plane &operator=(Plane &&) = default;
-    Plane &operator=(const Plane &) = default;
+  Plane() : normal{0, 0, 0}, point(0, 0, 0){};
+  Plane(const Vector3f &n, const Vector3f &p) : normal(n), point(p){};
+  Plane(Plane &&) = default;
+  Plane(const Plane &) = default;
+  Plane &operator=(Plane &&) = default;
+  Plane &operator=(const Plane &) = default;
 
-    int PointInPlane(const Vector3f& p);
+  int PointInPlane(const Vector3f &p);
 
-  private:
-    Vector3f normal;
-    Vector3f point;
+private:
+  Vector3f normal;
+  Vector3f point;
 };
 
 
