@@ -25,7 +25,6 @@ public:
   EulerAngles(const EulerAngles &) = default;
   EulerAngles &operator=(EulerAngles &&) = default;
   EulerAngles &operator=(const EulerAngles &) = default;
-  ~EulerAngles();
 
   void Identity()
   {

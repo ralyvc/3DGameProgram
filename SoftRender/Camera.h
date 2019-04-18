@@ -6,7 +6,7 @@
 class Camera
 {
   public:
-    Camera(const Vector3f&  pos,const Vector3f &dir, const Vector3f& target,float near_z,float far_z,float fov,float viewport_width,float viewport_height);
+    Camera(const Vector3f&  pos,const Vector3f &dir, float near_z,float far_z,float fov,float viewport_width,float viewport_height);
     Camera(Camera &&) = default;
     Camera(const Camera &) = default;
     Camera &operator=(Camera &&) = default;
@@ -52,7 +52,9 @@ class Camera
     //屏幕宽高比
     float aspect_ratio;
 
-public:
+    void CalcMatrix();
+
+  public:
     //变换矩阵
     Matrix4x4 mCam;    //世界坐标->相机坐标
     Matrix4x4 mPer;    //相机坐标->透视坐标

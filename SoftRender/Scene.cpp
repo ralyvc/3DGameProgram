@@ -22,6 +22,7 @@ void Scene::Update(unsigned int delta)
     for(auto model : models)
     {
         model->Update(delta);
+        visibleModels.push(model);
     }
 }
 

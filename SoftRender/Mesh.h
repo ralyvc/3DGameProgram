@@ -21,8 +21,8 @@ struct Mesh
     std::vector<Vector3i> textureIndices;
     std::vector<Vector3i> normalsIndices;
 
-    void BuildFaceNormals();
     void BuildTangetSpace();
+    void BuildFaceNormals();
 };
 
 

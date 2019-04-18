@@ -32,7 +32,7 @@ public:
       }
       
     };
-    void Update(unsigned int delta);
+    void Update(unsigned int delta){};
 
     Mesh* GetMesh() { return _mesh; }
     Matrix4x4 GetModelMatrix()

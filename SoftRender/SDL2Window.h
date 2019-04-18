@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "Color.h"
 #include "Matrix.h"
+#include "Scene.h"
 #pragma once
 
 class SDL2Window
@@ -15,13 +16,12 @@ class SDL2Window
     SDL_Surface *_surface;
     SDL_Event _event;
     Renderer *_renderer;
-
+    Scene *_scene;
 
   public:
     SDL2Window(int width, int height);
     void Run();
-    void Draw();
-    void Clear();
+
     ~SDL2Window();
 
   private:

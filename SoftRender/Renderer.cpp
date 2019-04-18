@@ -1,9 +1,10 @@
 #include "Renderer.h"
-#include <cstring>
-#include "Model.h"
-#include "Shader.h"
 #include "Camera.h"
-
+#include "Model.h"
+#include "Scene.h"
+#include "Shader.h"
+#include "Vector3.hpp"
+#include <cstring>
 void Renderer::clear()
 {
     pixBuffer->clear();
@@ -323,24 +324,27 @@ void Renderer::drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const
             right = xr;
             xl += sxLeft;
             xr += sxRight;
-            if (left <0)
+            if (left < 0)
             {
-                left = 0;    
-                if (right < 0 ) {
+                left = 0;
+                if (right < 0)
+                {
                     continue;
-                }             
-            }           
-            if (right >= _width) {
-                right = _width;         
-                if (left >= _width) {
-                    continue;
-                }  
+                }
             }
-            pixBuffer->SetBuffer(left, i, right , i, c.data);
+            if (right >= _width)
+            {
+                right = _width;
+                if (left >= _width)
+                {
+                    continue;
+                }
+            }
+            pixBuffer->SetBuffer(left, i, right, i, c.data);
         }
     }
 }
-    
+
 void Renderer::drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c)
 {
     float dxLeft = v2.x - v1.x;
@@ -394,34 +398,34 @@ void Renderer::drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, co
             right = xr;
             xl += sxLeft;
             xr += sxRight;
-            if (left <0)
+            if (left < 0)
             {
-                left = 0;    
-                if (right < 0 ) {
+                left = 0;
+                if (right < 0)
+                {
                     continue;
-                }             
-            }           
-            if (right >= _width) {
-                right = _width;         
-                if (left >= _width) {
-                    continue;
-                }  
+                }
             }
-            pixBuffer->SetBuffer(left, i, right , i, c.data);
+            if (right >= _width)
+            {
+                right = _width;
+                if (left >= _width)
+                {
+                    continue;
+                }
+            }
+            pixBuffer->SetBuffer(left, i, right, i, c.data);
         }
     }
-
 }
-
 
 void Renderer::PackData(Vector3i &index, Vector3f *primitive, std::vector<Vector3f> &vals)
 {
-    
-    for(size_t i = 0; i < 3; i++)
+
+    for (size_t i = 0; i < 3; i++)
     {
         primitive[i] = vals[index.data[i]];
     }
-    
 }
 
 void Renderer::DrawModel(Model *model)
@@ -440,16 +444,39 @@ void Renderer::DrawModel(Model *model)
     int numFaces = mesh->numFaces;
     FlatShader shader;
     shader.M = model->GetModelMatrix();
-    shader.MV = shader.M.operator*( camera->mCam);
+    shader.MV = shader.M.operator*(camera->mCam);
     shader.V = camera->mCam;
     shader.MVP = shader.MV * camera->mPer;
 
-    for(size_t i = 0; i < numFaces; i++)
+    for (size_t i = 0; i < numFaces; i++)
     {
         Vector3f trianglePrimitive[3], normalPrimitive[3], uvPrimitive[3], tangentPrimitive[3];
-
         PackData((*vIndices)[i], trianglePrimitive, *vertices);
 
+        for (size_t i = 0; i < 3; i++)
+        {
+            trianglePrimitive[i] = shader.vertex(trianglePrimitive[i], Vector3f(0, 0, 1), Vector3f(0, 0, 1), Vector3f(0, 0, 0), i);
+
+            
+        }
+        DrawLine(trianglePrimitive[0], trianglePrimitive[1], Color::Green);
+        DrawLine(trianglePrimitive[1], trianglePrimitive[2], Color::Green);
+        DrawLine(trianglePrimitive[0], trianglePrimitive[2], Color::Green);
     }
-    
+}
+
+void Renderer::SetScene(Scene *scene)
+{
+    this->scene = scene;
+}
+
+void Renderer::Update(unsigned int delta)
+{
+    clear();
+    auto models = scene->GetVisibleModels();
+    while (!models->empty())
+    {
+        DrawModel(models->front());
+        models->pop();
+    }
 }
