@@ -16,6 +16,7 @@ class Scene
     void Update(unsigned int delta);
 
     std::queue<Model *>* GetVisibleModels() { return &visibleModels; }
+    Camera *GetCamera(){return mainCamera;};
 
   private:
     void LoadModels();

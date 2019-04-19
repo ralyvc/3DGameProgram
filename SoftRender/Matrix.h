@@ -509,9 +509,10 @@ static Matrix4x4 TranslateMatrix(float dx, float dy, float dz)
 static Vector3<float> operator*(const Vector3<float> &lhs, const Matrix4x4 &mat) 
 {
     Vector3<float> res;
-    res.y = lhs.x * mat(0, 1) + lhs.y * mat(1, 1) + lhs.z * mat(2, 1) + mat(3, 1);
-    res.z = lhs.x * mat(0, 2) + lhs.y * mat(1, 2) + lhs.z * mat(2, 2) + mat(3, 2);
-    res.x = lhs.x * mat(0, 0) + lhs.y * mat(1, 0) + lhs.z * mat(2, 0) + mat(3, 0);
+    res.x = lhs.x * mat(0, 0) + lhs.y * mat(1, 0) + lhs.z * mat(2, 0) + lhs.w*mat(3, 0);
+    res.y = lhs.x * mat(0, 1) + lhs.y * mat(1, 1) + lhs.z * mat(2, 1) + lhs.w*mat(3, 1);
+    res.z = lhs.x * mat(0, 2) + lhs.y * mat(1, 2) + lhs.z * mat(2, 2) + lhs.w*mat(3, 2);
+    res.w = lhs.x * mat(0, 3) + lhs.y * mat(1, 3) + lhs.z * mat(2, 3) + lhs.w*mat(3, 3);
     return res;
 }
 #endif // !MATRIX_H

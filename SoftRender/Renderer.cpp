@@ -5,6 +5,15 @@
 #include "Shader.h"
 #include "Vector3.hpp"
 #include <cstring>
+
+Renderer::Renderer(int width, int height, Scene *s)
+{
+    _width = width;
+    _height = height;
+    pixBuffer = new Buffer<uint32_t>(_width, _height);
+    this->scene = s;
+    camera = s->GetCamera();
+};
 void Renderer::clear()
 {
     pixBuffer->clear();
@@ -12,7 +21,12 @@ void Renderer::clear()
 
 void Renderer::putPixel(int x, int y, const Color &color)
 {
-    (*pixBuffer)(x, y) = color.uint32();
+
+    if (x >= 0 && x < _width && y >= 0 && y < _height)
+    {
+        /* code */
+        (*pixBuffer)(x, y) = color.uint32();
+    }
 }
 
 void Renderer::BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c)
@@ -444,7 +458,7 @@ void Renderer::DrawModel(Model *model)
     int numFaces = mesh->numFaces;
     FlatShader shader;
     shader.M = model->GetModelMatrix();
-    shader.MV = shader.M.operator*(camera->mCam);
+    shader.MV = shader.M * camera->mCam;
     shader.V = camera->mCam;
     shader.MVP = shader.MV * camera->mPer;
 
@@ -456,18 +470,12 @@ void Renderer::DrawModel(Model *model)
         for (size_t i = 0; i < 3; i++)
         {
             trianglePrimitive[i] = shader.vertex(trianglePrimitive[i], Vector3f(0, 0, 1), Vector3f(0, 0, 1), Vector3f(0, 0, 0), i);
-
-            
+            trianglePrimitive[i].perspectiveDivide();
         }
-        DrawLine(trianglePrimitive[0], trianglePrimitive[1], Color::Green);
-        DrawLine(trianglePrimitive[1], trianglePrimitive[2], Color::Green);
-        DrawLine(trianglePrimitive[0], trianglePrimitive[2], Color::Green);
+        DrawLine(trianglePrimitive[0], trianglePrimitive[1], Color::Red());
+        DrawLine(trianglePrimitive[1], trianglePrimitive[2], Color::Red());
+        DrawLine(trianglePrimitive[0], trianglePrimitive[2], Color::Red());
     }
-}
-
-void Renderer::SetScene(Scene *scene)
-{
-    this->scene = scene;
 }
 
 void Renderer::Update(unsigned int delta)

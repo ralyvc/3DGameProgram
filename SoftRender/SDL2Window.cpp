@@ -14,7 +14,7 @@ SDL2Window::SDL2Window(int width, int height)
         _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height, SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
         _scene = new Scene();
-        _renderer = new Renderer(_width, _height);
+        _renderer = new Renderer(_width, _height,_scene);
         _isRunning = true;
     }
     catch (const char *s)

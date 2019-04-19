@@ -3,27 +3,28 @@
 #include "EulerAngles.h"
 #include "Geometry.h"
 #include "Vector3.hpp"
+#include "MathUtil.h"
 class Camera
 {
   public:
-    Camera(const Vector3f&  pos,const Vector3f &dir, float near_z,float far_z,float fov,float viewport_width,float viewport_height);
+    Camera(float near_z,float far_z,float fov,float viewport_width,float viewport_height);
     Camera(Camera &&) = default;
     Camera(const Camera &) = default;
     Camera &operator=(Camera &&) = default;
     Camera &operator=(const Camera &) = default;
 
     void Update();
+    void LookAt(Vector3f target);
 
   private:
-    Vector3f pos;
-    EulerAngles dir;
+    Vector3f pos{8, -8, 4};
+    EulerAngles dir{0, kPiOver2, 0};
 
     //uvn相机模型的朝向向量
-    Vector3f u;
-    Vector3f v;
-    Vector3f n;
+    // Vector3f u;
+    // Vector3f v;
+    // Vector3f n;
 
-    Vector3f target;
 
     //水平视距和垂直视距
     float view_dist;

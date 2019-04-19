@@ -4,12 +4,12 @@
 ** File description:
 ** Renderer
 */
-#include <queue>
 #include "Buffer.h"
 #include "Color.h"
-#include "Vector3.hpp"
 #include "Matrix.h"
+#include "Vector3.hpp"
 #include <iostream>
+#include <queue>
 #include <vector>
 
 #if !defined(RENDERER_H)
@@ -49,18 +49,11 @@ class Renderer
     Scene *scene;
 
   public:
-    Renderer(int width, int height)
-    {
-        _width = width;
-        _height = height;
-        pixBuffer = new Buffer<uint32_t>(_width, _height);
-    };
+    Renderer(int width, int height,Scene* s);
     void BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c);
     void BresenhamLine(int x0, int y0, int x1, int y1, const Color &c);
     Buffer<uint32_t> *GetBuffer() const;
     virtual ~Renderer() { delete pixBuffer; };
-
-
 
     bool ClipLine(int &x0, int &y0, int &x1, int &y1) const;
 
@@ -70,17 +63,20 @@ class Renderer
 
     void DrawLine(const Vector3f &p0, const Vector3f &p1, const Color &c)
     {
-        BresenhamLine(p0.x, p0.y, p1.x, p1.y, c);
+        float alpha = 0.5 * _width - 0.5;
+        float beta = 0.5 * _height - 0.5;
+        int x0 = alpha + alpha * p0.x;
+        int y0 = beta - beta * p0.y;
+        int x1 = alpha + alpha * p1.x;
+        int y1 = beta - beta * p1.y;
+
+        BresenhamLine(x0, y0, x1, y1, c);
     }
-    void DrawLine(const Vector3i &p0, const Vector3i &p1, const Color &c)
-    {
-        BresenhamLine(p0.x, p0.y, p1.x, p1.y, c);
-    }
+
     void DrawModel(Model *model);
 
     void Update(unsigned int delta);
 
-    void SetScene(Scene *);
     Scene *GetScene() { return scene; };
 
     std::queue<Model *> renderQueue;
