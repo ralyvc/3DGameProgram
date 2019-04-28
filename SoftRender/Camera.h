@@ -13,11 +13,12 @@ class Camera
     Camera &operator=(Camera &&) = default;
     Camera &operator=(const Camera &) = default;
 
-    void Update();
+    void Update(unsigned int delta);
     void LookAt(Vector3f target);
+    float theta = 0;
 
   private:
-    Vector3f pos{8, -8, 4};
+    Vector3f pos{7, 0, 7};
     EulerAngles dir{0, kPiOver2, 0};
 
     //uvn相机模型的朝向向量

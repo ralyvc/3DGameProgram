@@ -457,14 +457,16 @@ class RotationMatrix : public Matrix4x4
         float sh = sin(r.heading);
         float sp = sin(r.pitch);
         float sb = sin(r.bank);
-        _data[0][0] = ch * cb + sh * sp * sb;
-        _data[0][1] = sp * sb;
-        _data[0][2] = -sh * cb + ch * sp * sb;
-        _data[1][0] = -ch * cb + sh * sp * cb;
+        _data[0][0] = ch * cb - sh * sp * sb;
+        _data[1][0] = -sp * sb;
+        _data[2][0] = sh * cb + ch * sp * sb;
+
+        _data[0][1] = sb * ch + sh * sp * cb;
         _data[1][1] = cp * cb;
-        _data[1][2] = sb * sh + ch * sp * cb;
-        _data[2][0] = sh * cp;
-        _data[2][1] = -sp;
+        _data[2][1] = sb * sh - ch * sp * cb;
+
+        _data[0][2] = -sh * cp;
+        _data[1][2] = sp;
         _data[2][2] = ch * cp;
         _data[3][3] = 1;
     }

@@ -30,11 +30,12 @@ void Scene::Update(unsigned int delta)
         model->Update(delta);
         visibleModels.push(model);
     }
+    mainCamera->Update(delta);
 }
 
 void Scene::LoadModels()
 {
-    std::string path = "test.obj";
+    std::string path = "test1.obj";
     models.push_back(new Model(path));
 }
 

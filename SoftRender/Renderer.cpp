@@ -22,7 +22,7 @@ void Renderer::clear()
 void Renderer::putPixel(int x, int y, const Color &color)
 {
 
-    if (x >= 0 && x < _width && y >= 0 && y < _height)
+   // if (x >= 0 && x < _width && y >= 0 && y < _height)
     {
         /* code */
         (*pixBuffer)(x, y) = color.uint32();
@@ -95,6 +95,47 @@ void Renderer::BresenhamLine(int x0, int y0, int x1, int y1, const Color &c)
         }
     }
 }
+
+
+void Renderer::drawLine(int x1, int y1, int x2, int y2, const Color &c ){
+
+   if(! ClipLine(x1, y1, x2, y2)) return;
+    //transpose line if it is too steep
+    bool steep = false;
+    if (std::abs(x1-x2) < std::abs(y1-y2) ){
+        std::swap(x1,y1);
+        std::swap(x2,y2);
+        steep = true;
+    }
+
+    //Redefine line so that it is left to right
+    if ( x1  > x2 ){
+        std::swap(x1,x2);
+        std::swap(y1,y2);
+    }
+
+    //Redefined to use only int arithmetic
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int derror2 = std::abs(dy)*2;
+    int error2 = 0;
+    int y = y1;
+
+    for(int x=x1; x <= x2 ; x++){
+        if(steep){
+            putPixel(y, x, c);  //Swap back because of steep transpose
+        }
+        else{
+            putPixel(x, y, c);
+        }
+        error2 += derror2;
+        if (error2 > dx){
+            y += (y2 > y1  ? 1 : -1);
+            error2 -= dx*2;
+        }
+    } 
+}
+
 
 Renderer::ClipCode Renderer::getClipCode(int x, int y) const
 {
@@ -472,9 +513,9 @@ void Renderer::DrawModel(Model *model)
             trianglePrimitive[i] = shader.vertex(trianglePrimitive[i], Vector3f(0, 0, 1), Vector3f(0, 0, 1), Vector3f(0, 0, 0), i);
             trianglePrimitive[i].perspectiveDivide();
         }
-        DrawLine(trianglePrimitive[0], trianglePrimitive[1], Color::Red());
-        DrawLine(trianglePrimitive[1], trianglePrimitive[2], Color::Red());
-        DrawLine(trianglePrimitive[0], trianglePrimitive[2], Color::Red());
+        DrawLine(trianglePrimitive[0], trianglePrimitive[1], Color::Blue());
+        DrawLine(trianglePrimitive[1], trianglePrimitive[2], Color::Blue());
+        DrawLine(trianglePrimitive[0], trianglePrimitive[2], Color::Blue());
     }
 }
 

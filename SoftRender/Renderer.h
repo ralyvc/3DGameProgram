@@ -60,7 +60,7 @@ class Renderer
     void DrawTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
     void drawFlatTopTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
     void drawFlatBottomTriangle(const Vector3i &v1, const Vector3i &v2, const Vector3i &v3, const Color &c);
-
+    void drawLine(int x0, int y0, int x1, int y1, const Color &c);
     void DrawLine(const Vector3f &p0, const Vector3f &p1, const Color &c)
     {
         float alpha = 0.5 * _width - 0.5;
@@ -70,7 +70,7 @@ class Renderer
         int x1 = alpha + alpha * p1.x;
         int y1 = beta - beta * p1.y;
 
-        BresenhamLine(x0, y0, x1, y1, c);
+        drawLine(x0, y0, x1, y1, c);
     }
 
     void DrawModel(Model *model);

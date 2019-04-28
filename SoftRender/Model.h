@@ -15,8 +15,8 @@ public:
   Model(const std::string meshPath)
   {
     _mesh = BuildMeshFromFile(meshPath);
-    Position = Vector3f(2, 6, 0);
-    dir = EulerAngles(0, 0, 0);
+    Position = Vector3f(0, 0, 0);
+    dir = EulerAngles(90, 0, 0);
     Scale = Vector3f(1, 1, 1);
   };
   Model(Model &&) = default;
@@ -37,7 +37,7 @@ public:
   Mesh *GetMesh() { return _mesh; }
   Matrix4x4 GetModelMatrix()
   {
-    return TranslateMatrix(Position.x, Position.y, Position.z) * RotationMatrix(dir) * ScaleMatrix(Scale.x, Scale.y, Scale.z);
+    return ScaleMatrix(Scale.x, Scale.y, Scale.z) * RotationMatrix(dir) * TranslateMatrix(Position.x, Position.y, Position.z);
   }
 
   Vector3f Position;

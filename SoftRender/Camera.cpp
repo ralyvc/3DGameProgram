@@ -65,12 +65,15 @@ void Camera::CalcMatrix()
     mPer.Zero();
     mPer(0, 0) = 2 * near_clip_z / viewplane_width;
     mPer(1, 1) = 2 * near_clip_z / viewplane_height;
-    mPer(2, 2) = far_clip_z / (far_clip_z - near_clip_z);
-    mPer(2, 3) = -mPer(2, 2) * near_clip_z;
+    mPer(2, 3) = far_clip_z / (far_clip_z - near_clip_z);
+    mPer(2, 2) = -mPer(2, 2) * near_clip_z;
     mPer(3, 2) = 1;
 }
 
-void Camera::Update()
+void Camera::Update(unsigned int delta)
 {
-
+    theta += kPi / 5.0 * delta / 1000;
+    pos.x = cos(theta) * 10;
+    pos.z = sin(theta) * 10;
+    LookAt(Vector3f(0, 0, 0));
 }
