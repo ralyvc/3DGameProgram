@@ -1,4 +1,5 @@
 #include "../Third/include/SDL2/SDL.h"
+#include "../Third/include/SDL2/SDL_ttf.h"
 #include "Renderer.h"
 #include "Buffer.h"
 #include "Color.h"
@@ -17,7 +18,7 @@ class SDL2Window
     SDL_Event _event;
     Renderer *_renderer;
     Scene *_scene;
-
+    TTF_Font *font;
     bool isMouseButtonDown = false;
     float thetax = 0;
     float thetay = 0;

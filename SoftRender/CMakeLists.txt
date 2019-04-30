@@ -17,7 +17,7 @@ add_library(RenderEngine ${DIR_LIB_SRCS})
 #TARGET_LINK_LIBRARIES(RenderEngine ${PROJECT_SOURCE_DIR}/Third/libs/libSDL2.a)  
 #TARGET_LINK_LIBRARIES(RenderEngine ${PROJECT_SOURCE_DIR}/Third/libs/libSDL2main.a)  
 TARGET_LINK_LIBRARIES(RenderEngine ${PROJECT_SOURCE_DIR}/Third/libs/libSDL2.dll.a)  
- 
+TARGET_LINK_LIBRARIES(RenderEngine ${PROJECT_SOURCE_DIR}/Third/libs/libSDL2_ttf.dll.a)  
 
 
 

@@ -2,6 +2,19 @@
 #include "Camera.h"
 #include <iostream>
 
+void ApplySurface(int x, int y, SDL_Surface* pSrc, SDL_Surface* pDest)  
+{  
+    SDL_Rect rect;  
+  
+    rect.x = x;  
+    rect.y = y;  
+    rect.w = pSrc->w;  
+    rect.h = pSrc->h;  
+  
+    SDL_BlitSurface(pSrc, NULL, pDest, &rect);  
+
+} 
+
 SDL2Window::SDL2Window(int width, int height)
 {
     try
@@ -10,13 +23,23 @@ SDL2Window::SDL2Window(int width, int height)
         {
             throw SDL_GetError();
         }
+        if (TTF_Init() == -1)
+        {
+            throw TTF_GetError();
+        }
+ 
         _width = width;
         _height = height;
         _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height, SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
+         
         _scene = new Scene();
         _renderer = new Renderer(_width, _height, _scene);
         _isRunning = true;
+
+        font = TTF_OpenFont("STHUPO.TTF", 40);
+
+
     }
     catch (const char *s)
     {
@@ -31,16 +54,28 @@ void SDL2Window::Run()
     unsigned int deltaT = 0;
     unsigned int start = 0;
     unsigned int total = 0;
+    char showFps[255] = "Fps:00";
     while (_isRunning)
     {
         start = SDL_GetTicks();
         ++count;
         UpdateInput();
+
         _scene->Update(deltaT);
         _renderer->Update(deltaT);
         SwapBuffers();
         deltaT = SDL_GetTicks() - start;
-        printf("%2.1d: Frame elapsed time (ms):%d\n",count, deltaT);
+        if (total >= 300 )
+        {
+            sprintf(showFps, "FPS:%.2f", 1000.f / deltaT);
+
+            total = 0;
+        }
+        auto pText = TTF_RenderUTF8_Blended (font, showFps, SDL_Color{255,0,255,255});  
+        ApplySurface(1000, 50, pText, _surface);
+        SDL_FreeSurface(pText);  
+        SDL_UpdateWindowSurface(_window);
+
         total += deltaT;
     }
 }
@@ -93,7 +128,6 @@ void SDL2Window::UpdateInput()
         }
         break;
         default:
-        std::cout <<_event.type << endl;
             break;
         }
     }
@@ -128,13 +162,13 @@ void SDL2Window::SwapBuffers()
     memcpy(_surface->pixels, pixels->buffer, pixels->mHeight * pixels->mPitch);
     SDL_UnlockSurface(_surface);
 
-    //Apply surface changes to window
-    SDL_UpdateWindowSurface(_window);
 }
 
 SDL2Window::~SDL2Window()
 {
     delete _renderer;
     delete _scene;
+    TTF_CloseFont(font);
+    TTF_Quit();
     SDL_Quit();
 }
