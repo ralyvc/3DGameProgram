@@ -18,6 +18,11 @@ class SDL2Window
     Renderer *_renderer;
     Scene *_scene;
 
+    bool isMouseButtonDown = false;
+    float thetax = 0;
+    float thetay = 0;
+
+
   public:
     SDL2Window(int width, int height);
     void Run();

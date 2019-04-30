@@ -451,23 +451,28 @@ class RotationMatrix : public Matrix4x4
     RotationMatrix(const EulerAngles &r)
 
     {
-        float ch = cos(r.heading);
-        float cp = cos(r.pitch);
-        float cb = cos(r.bank);
-        float sh = sin(r.heading);
-        float sp = sin(r.pitch);
-        float sb = sin(r.bank);
-        _data[0][0] = ch * cb - sh * sp * sb;
-        _data[1][0] = -sp * sb;
-        _data[2][0] = sh * cb + ch * sp * sb;
+        float head = RadiansFromDegrees(r.heading);
+        float pitch = RadiansFromDegrees(r.pitch);
+        float bank = RadiansFromDegrees(r.bank);
 
-        _data[0][1] = sb * ch + sh * sp * cb;
+        float ch = cos( head);
+        float cp = cos(pitch);
+        float cb = cos(bank);
+        float sh = sin(head);
+        float sp = sin(pitch);
+        float sb = sin(bank);
+        _data[0][0] = ch * cb + sh * sp * sb;
+        _data[1][0] = sp * sb;
+        _data[2][0] = -sh * cb + ch * sp * sb;
+
+        _data[0][1] = -sb * ch + sh * sp * cb;
         _data[1][1] = cp * cb;
-        _data[2][1] = sb * sh - ch * sp * cb;
+        _data[2][1] = sb * sh + ch * sp * cb;
 
-        _data[0][2] = -sh * cp;
-        _data[1][2] = sp;
+        _data[0][2] = sh * cp;
+        _data[1][2] = -sp;
         _data[2][2] = ch * cp;
+
         _data[3][3] = 1;
     }
 
@@ -482,7 +487,9 @@ class RotationMatrix : public Matrix4x4
         _data[2][0] = 2 * r.x * r.z + 2 * r.w * r.y;
         _data[2][1] = 2 * r.y * r.z - 2 * r.w * r.x;
         _data[2][2] = 1 - 2 * r.x * r.x - 2 * r.y * r.y;
+        _data[3][3] = 1;
     };
+
 };
 
 static Matrix4x4 ScaleMatrix(float scaleX, float scaleY, float scaleZ)
@@ -511,10 +518,28 @@ static Matrix4x4 TranslateMatrix(float dx, float dy, float dz)
 static Vector3<float> operator*(const Vector3<float> &lhs, const Matrix4x4 &mat) 
 {
     Vector3<float> res;
-    res.x = lhs.x * mat(0, 0) + lhs.y * mat(1, 0) + lhs.z * mat(2, 0) + lhs.w*mat(3, 0);
-    res.y = lhs.x * mat(0, 1) + lhs.y * mat(1, 1) + lhs.z * mat(2, 1) + lhs.w*mat(3, 1);
-    res.z = lhs.x * mat(0, 2) + lhs.y * mat(1, 2) + lhs.z * mat(2, 2) + lhs.w*mat(3, 2);
-    res.w = lhs.x * mat(0, 3) + lhs.y * mat(1, 3) + lhs.z * mat(2, 3) + lhs.w*mat(3, 3);
+    res.x = lhs.x * mat(0, 0) + lhs.y * mat(1, 0) + lhs.z * mat(2, 0) + mat(3, 0);
+    res.y = lhs.x * mat(0, 1) + lhs.y * mat(1, 1) + lhs.z * mat(2, 1) + mat(3, 1);
+    res.z = lhs.x * mat(0, 2) + lhs.y * mat(1, 2) + lhs.z * mat(2, 2) + mat(3, 2);
+    res.w = lhs.x * mat(0, 3) + lhs.y * mat(1, 3) + lhs.z * mat(2, 3) + mat(3, 3);
     return res;
 }
+
+static Vector3f matMultDir(const Matrix4x4& mat, const Vector3f &vec){
+    Vector3f newVec(0,0,0);
+    newVec.x = vec.x*(mat)(0,0)+
+               vec.y*(mat)(1,0)+
+               vec.z*(mat)(2,0); //Assuming wO of vec always  = 1
+
+    newVec.y = vec.x*(mat)(0,1)+
+               vec.y*(mat)(1,1)+
+               vec.z*(mat)(2,1); //Assuming wO of vec always  = 1
+
+    newVec.z = vec.x*(mat)(0,2)+
+               vec.y*(mat)(1,2)+
+               vec.z*(mat)(2,2);; //Assuming wO of vec always  = 1
+
+    return newVec;
+}
+
 #endif // !MATRIX_H

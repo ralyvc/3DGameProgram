@@ -1,4 +1,5 @@
 #include "SDL2Window.h"
+#include "Camera.h"
 #include <iostream>
 
 SDL2Window::SDL2Window(int width, int height)
@@ -14,7 +15,7 @@ SDL2Window::SDL2Window(int width, int height)
         _window = SDL_CreateWindow("Solft Render based on SDL2", 30, 30, _width, _height, SDL_WINDOW_POPUP_MENU);
         _surface = SDL_GetWindowSurface(_window);
         _scene = new Scene();
-        _renderer = new Renderer(_width, _height,_scene);
+        _renderer = new Renderer(_width, _height, _scene);
         _isRunning = true;
     }
     catch (const char *s)
@@ -44,7 +45,6 @@ void SDL2Window::Run()
     }
 }
 
-
 void SDL2Window::UpdateInput()
 {
     if (SDL_PollEvent(&_event))
@@ -58,7 +58,42 @@ void SDL2Window::UpdateInput()
         case SDL_KEYDOWN:
             HandleKey();
             break;
+        case SDL_MOUSEWHEEL:
+            //_scene->mainCamera
+
+            //_scene->GetCamera()->pos += Vector3f(0, 0, 0);
+            _scene->GetCamera()->SetPos(_scene->GetCamera()->GetPos() + _scene->GetCamera()->GetForward() * _event.wheel.y);
+
+            //std::cout << "wheel x:" << _event.wheel.x << " wheel y:" << _event.wheel.y << endl;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+
+            isMouseButtonDown = true;
+            break;
+        case SDL_MOUSEBUTTONUP:
+            isMouseButtonDown = false;
+            break;
+        case SDL_MOUSEMOTION:
+        {
+            
+            if (isMouseButtonDown) 
+            {
+                thetax -= kPi / 3 * _event.motion.xrel / 1000;
+                thetay += kPi / 3 * _event.motion.yrel / 1000;
+                auto l = _scene->GetCamera()->GetPos().length();
+                Vector3f pos;
+                pos.x = cos(thetax) * cos(thetay) * l;
+                pos.z = sin(thetax) * cos(thetay) * l;
+                pos.y = sin(thetay) * l;
+                _scene->GetCamera()->SetPos(pos);
+                _scene->GetCamera()->LookAt(Vector3f(0, 0, 0));
+                //std::cout << "wheel x:" << _event.motion.xrel << " wheel y:" << _event.motion.xrel << endl;
+            }
+            
+        }
+        break;
         default:
+        std::cout <<_event.type << endl;
             break;
         }
     }

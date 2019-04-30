@@ -22,7 +22,8 @@ public:
 public:
   EulerAngles() {}
   EulerAngles(const RotationMatrix &mat);
-  EulerAngles(float x, float y, float z) : heading(RadiansFromDegrees( y)), pitch(RadiansFromDegrees( x)), bank(RadiansFromDegrees( z)) {}
+  EulerAngles(const Quaternion &q);
+  EulerAngles(float x, float y, float z) : heading( y), pitch( x), bank( z) {}
   EulerAngles(const Vector3f &vec) : y(vec.y), x(vec.x), z(vec.z) {}
   EulerAngles(EulerAngles &&) = default;
   EulerAngles(const EulerAngles &) = default;
@@ -35,7 +36,6 @@ public:
   }
 
   void Canonize();
-  Quaternion ToQuaternion();
 
 private:
 };

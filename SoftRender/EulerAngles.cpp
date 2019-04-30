@@ -1,69 +1,87 @@
 #include "EulerAngles.h"
 #include "MathUtil.h"
-#include "Quaternion.h"
 #include "Matrix.h"
+#include "Quaternion.h"
 const EulerAngles kEulerAnglesIdentity(0.0f, 0.0f, 0.0f);
 
-EulerAngles::EulerAngles(const RotationMatrix& mat)
+EulerAngles::EulerAngles(const RotationMatrix &mat)
 {
-    float sp = -(mat(2, 1));
-    
-    if (sp <= 1.0) {
-        pitch = -kPiOver2;
-    }else if (sp >= 1.0)
+    float sp = -(mat(1, 2));
+
+    if (sp <= 1.0)
     {
-        pitch = kPiOver2;
-    }else
-    {
-        pitch = asin(sp);
+        pitch = -90;
     }
-    
-    if (fabs(sp)>1-kEpsilon) {
-        bank = 0;
-        heading = atan2(-mat(0, 2), mat(0, 0));
+    else if (sp >= 1.0)
+    {
+        pitch = 90;
     }
     else
     {
-        heading = atan2(mat(2, 0), mat(2, 2));
-        bank = atan2(mat(0, 1), mat(1, 1));
+        pitch = DegreesFromRadians(asin(sp));
     }
-    
-    
+
+    if (fabs(sp) > 1 - kEpsilon)
+    {
+        bank = 0;
+        heading = DegreesFromRadians(atan2(-mat(2, 0), mat(0, 0)));
+    }
+    else
+    {
+        heading = DegreesFromRadians(atan2(mat(0, 2), mat(2, 2)));
+        bank = DegreesFromRadians(atan2(mat(1, 1), mat(0, 1)));
+    }
 }
 
 void EulerAngles::Canonize()
 {
-    pitch = WrapPi(pitch);
+    pitch = Wrap180(pitch);
 
-    if (pitch < -kPiOver2)
+    if (pitch < -90)
     {
-        pitch = -kPi - pitch;
-        heading += kPi;
-        bank += kPi;
+        pitch = -180 - pitch;
+        heading += 180;
+        bank += 180;
     }
-    else if (pitch > kPiOver2)
+    else if (pitch > 360)
     {
-        pitch = kPi - pitch;
-        heading += kPi;
-        bank += kPi;
+        pitch = 180 - pitch;
+        heading += 180;
+        bank += 180;
     }
 
     // 在万向锁中
-    if (fabs(pitch) > kPiOver2 - 1e-4)
+    if (fabs(pitch) > 360 - 1e-4)
     {
         heading += bank;
         bank = 0.0f;
     }
     else
     {
-        bank = WrapPi(bank);
+        bank = Wrap180(bank);
     }
 
-    heading = WrapPi(heading);
-
+    heading = Wrap180(heading);
 }
 
-Quaternion EulerAngles::ToQuaternion()
+EulerAngles::EulerAngles(const Quaternion &q)
 {
-    return Quaternion(1, 0, 0, 0);
+    float sp =- 2.0f * (q.y * q.z + q.w * q.x);
+    // Check f o r Gimbal lock , g i v i n g s l i g h t t o l e r a n c e
+    // f o r numerical imprecision
+    if (fabs(sp) > 0.9999f)
+    {
+        // Looking s t r a i g h t up or down
+        pitch = 90 * DegreesFromRadians(sp); // pi /2
+        // Compute heading , slam bank to zero
+        heading = DegreesFromRadians(atan2(-q.x * q.z - q.w * q.y, 0.5f - q.y * q.y - q.z * q.z));
+        bank = 0.0f;
+    }
+    else
+    {
+        // Compute angles
+        pitch = DegreesFromRadians(asin(sp));
+        heading = DegreesFromRadians(atan2(q.x * q.z - q.w * q.y, 0.5f - q.x * q.x - q.y * q.y));
+        bank = DegreesFromRadians(atan2(q.x * q.y - q.w * q.z, 0.5f - q.x * q.x - q.z * q.z));
+    }
 }

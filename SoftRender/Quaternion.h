@@ -9,7 +9,8 @@ public:
   float w, x, y, z;
 
 public:
-  Quaternion(float ww, float xx, float yy, float zz) : w(ww), x(xx), y(yy), z(ww) {}
+  Quaternion() { Identity(); }
+  Quaternion(float ww, float xx, float yy, float zz) : w(ww), x(xx), y(yy), z(zz) {}
   Quaternion(Quaternion &&) = default;
   Quaternion(const Quaternion &) = default;
   Quaternion &operator=(Quaternion &&) = default;

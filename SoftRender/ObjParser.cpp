@@ -77,5 +77,7 @@ Mesh * LoadFile( std::ifstream &file)
     }
     mesh->numVertices = mesh->vectices.size();
     mesh->numFaces = mesh->vectexIndices.size();
+    mesh->BuildFaceNormals();
+    mesh->BuildTangetSpace();
     return mesh;
 }

@@ -16,10 +16,23 @@ class Camera
     void Update(unsigned int delta);
     void LookAt(Vector3f target);
     float theta = 0;
+    Vector3f GetForward();
+    
+    const Vector3f& GetPos() const
+    {
+      return pos;
+    }
+    
+    void SetPos(const Vector3f p)
+    {
+      pos = p;
+      translate = TranslateMatrix(-pos.x, -pos.y, -pos.z);
+      CalcToCameraMatrix();
+    }
 
   private:
-    Vector3f pos{7, 0, 7};
-    EulerAngles dir{0, kPiOver2, 0};
+    Vector3f pos{0, 0, -10};
+    EulerAngles dir{0, 0, 0};
 
     //uvn相机模型的朝向向量
     // Vector3f u;
@@ -54,14 +67,18 @@ class Camera
     //屏幕宽高比
     float aspect_ratio;
 
-    void CalcMatrix();
+    void CalcToCameraMatrix();
+    void CalcPerMatrix();
 
   public:
     //变换矩阵
     Matrix4x4 mCam;    //世界坐标->相机坐标
     Matrix4x4 mPer;    //相机坐标->透视坐标
     Matrix4x4 mScreen; //透视坐标->屏幕坐标
-
+private:
+//平移和旋转的逆矩阵
+  Matrix4x4 translate;
+  Matrix4x4 rotation;
 };
 
 #endif // CAMERA_H

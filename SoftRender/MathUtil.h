@@ -18,6 +18,15 @@ static float WrapPi(float theta)
     return theta;
 }
 
+static float Wrap180(float theta)
+{
+    if (fabs(theta) > 180)
+    {
+        return theta - floorf((theta + 180) / 2*180) * 360 - 180;
+    }
+    return theta;
+}
+
 static inline bool FloatEqual(float a, float b)
 {
     return fabsf(a - b) <= kEpsilon;

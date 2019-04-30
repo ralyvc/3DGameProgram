@@ -48,6 +48,8 @@ class Renderer
     void clear();
     Scene *scene;
 
+    bool backFaceCulling(const Vector3f &fnormal,const Vector3f &vert,const Matrix4x4& objToWorld) const;
+
   public:
     Renderer(int width, int height,Scene* s);
     void BresenhamLine1(int x0, int y0, int x1, int y1, const Color &c);
@@ -80,6 +82,7 @@ class Renderer
     Scene *GetScene() { return scene; };
 
     std::queue<Model *> renderQueue;
+
 };
 
 #endif // RENDERER_H

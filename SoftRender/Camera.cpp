@@ -31,7 +31,11 @@ Camera::Camera( float near_z, float far_z, float fov, float viewport_width, floa
     vn = Vector3f(0, -view_dist, -viewplane_width / 2);
     bt_clip_plane = Plane(vn, pt);
 
-    CalcMatrix();
+    translate = TranslateMatrix(-pos.x, -pos.y, -pos.z);
+    rotation = RotationMatrix(dir).Transpose();
+    CalcToCameraMatrix();
+
+    CalcPerMatrix();
 }
 
 void Camera::LookAt(Vector3f target)
@@ -40,28 +44,37 @@ void Camera::LookAt(Vector3f target)
     Vector3f v = Vector3f(0, 1, 0);
     auto u = (v.crossProduct(n)).normalized();
     v = n.crossProduct(u);
-    mCam.Zero();
-    mCam(0, 0) = u.x;
-    mCam(1, 0) = u.y;
-    mCam(2, 0) = u.z;
-    mCam(3, 0) = -u.dotProduct(pos);
-    mCam(0, 1) = v.x;
-    mCam(1, 1) = v.y;
-    mCam(2, 1) = v.z;
-    mCam(3, 1) = -v.dotProduct(pos);
-    mCam(0, 2) = n.x;
-    mCam(1, 2) = n.y;
-    mCam(2, 2) = n.z;
-    mCam(3, 2) = -n.dotProduct(pos);
-    mCam(3, 3) = 1;
+
+    rotation(0, 0) = u.x;
+    rotation(1, 0) = u.y;
+    rotation(2, 0) = u.z;
+
+    rotation(0, 1) = v.x;
+    rotation(1, 1) = v.y;
+    rotation(2, 1) = v.z;
+
+    rotation(0, 2) = n.x;
+    rotation(1, 2) = n.y;
+    rotation(2, 2) = n.z;
+
+    CalcToCameraMatrix();
+
+    dir = EulerAngles(RotationMatrix(rotation.Transpose()));
+}
+
+Vector3f Camera::GetForward()
+{
+    return Vector3f(mCam(0, 2), mCam(1, 2), mCam(2, 2));
+}
+
+void Camera::CalcToCameraMatrix()
+{
+    mCam = translate * rotation;
 }
 
 
-void Camera::CalcMatrix()
+void Camera::CalcPerMatrix()
 {
-    Matrix4x4 matRotInv = RotationMatrix(dir).Transpose();
-    Matrix4x4 matTranslate = TranslateMatrix(-pos.x, -pos.y, -pos.z);
-    mCam = matTranslate * matRotInv;
     mPer.Zero();
     mPer(0, 0) = 2 * near_clip_z / viewplane_width;
     mPer(1, 1) = 2 * near_clip_z / viewplane_height;
@@ -70,10 +83,17 @@ void Camera::CalcMatrix()
     mPer(3, 2) = 1;
 }
 
+
 void Camera::Update(unsigned int delta)
 {
-    theta += kPi / 5.0 * delta / 1000;
-    pos.x = cos(theta) * 10;
-    pos.z = sin(theta) * 10;
-    LookAt(Vector3f(0, 0, 0));
+
+    //CalcPerMatrix();
+
+    //LookAt(Vector3f(0, 0, 0));
+    //auto rot = AngleAxis(theta, Vector3f(0, 1, 0));
+
+    //mCam = RotationMatrix(rot).Transpose() * TranslateMatrix(-pos.x, -pos.y, -pos.z);
+
+    //dir = EulerAngles(mCam);
+
 }
